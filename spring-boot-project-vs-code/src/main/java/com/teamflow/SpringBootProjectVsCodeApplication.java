@@ -1,4 +1,4 @@
-package com.teamflow.spring_boot_project_vs_code;
+package com.teamflow;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
