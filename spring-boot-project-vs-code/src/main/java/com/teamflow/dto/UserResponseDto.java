@@ -2,16 +2,16 @@ package com.teamflow.dto;
 
 import com.teamflow.model.User;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class UserResponseDto {
-    private Long id;
+    private Long userId;
     private String username;
-    private String userid;
 
     public UserResponseDto(User user) {
-        this.id = user.getId();
+        this.userId = user.getId(); // ✅ 올바른 getter 사용
         this.username = user.getUsername();
-        this.userid = user.getUserid();
     }
 }

@@ -1,15 +1,28 @@
 package com.teamflow.config;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "TeamFlow API", version = "1.0"), security = @SecurityRequirement(name = "basicAuth"))
-@SecurityScheme(name = "basicAuth", type = SecuritySchemeType.HTTP, scheme = "basic" // ✅ Basic Auth 사용
-)
 public class SwaggerConfig {
+
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("TeamFlow API")
+                        .version("1.0")
+                        .description("TeamFlow 프로젝트의 API 문서입니다."))
+                .addSecurityItem(new SecurityRequirement().addList("JWT"))
+                .components(new io.swagger.v3.oas.models.Components()
+                        .addSecuritySchemes("JWT", new SecurityScheme()
+                                .name("JWT")
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")));
+    }
 }
