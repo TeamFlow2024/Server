@@ -4,7 +4,7 @@ import com.teamflow.dto.LoginRequestDto;
 import com.teamflow.model.User;
 import com.teamflow.repository.UserRepository;
 import com.teamflow.security.JwtTokenProvider;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,11 +12,12 @@ import java.util.Optional;
 @Service
 public class AuthService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder; // ✅ PasswordEncoder 인터페이스 사용
     private final JwtTokenProvider jwtTokenProvider;
 
     // ✅ 모든 필드를 생성자에서 주입받도록 수정
-    public AuthService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+            JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;

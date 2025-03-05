@@ -19,7 +19,6 @@ public class User {
 
   @Column(unique = true, nullable = false)
   private String username; // 닉네임
-  private String userid; // 아이디
 
   @JsonIgnore
   @Column(nullable = false)

@@ -2,9 +2,12 @@ package com.teamflow.controller;
 
 import com.teamflow.dto.UserRequestDto;
 import com.teamflow.dto.UserResponseDto;
+import com.teamflow.dto.UserUpdateRequestDto;
 import com.teamflow.service.UserService;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -33,5 +36,25 @@ public class UserController {
         return result.equals("회원가입 성공!")
                 ? ResponseEntity.ok(response)
                 : ResponseEntity.badRequest().body(response);
+    }
+
+    // 회원 정보 조회 API (GET /api/user/profile)
+    @GetMapping("/profile")
+    public ResponseEntity<?> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        Optional<UserResponseDto> userResponse = userService.getUserProfile(userDetails.getUsername());
+
+        if (userResponse.isPresent()) {
+            return ResponseEntity.ok(userResponse.get());
+        } else {
+            return ResponseEntity.badRequest().body(Map.of("message", "User not found"));
+        }
+    }
+
+    // 회원 정보 수정 API (PATCH /api/user/profile)
+    @PatchMapping("/profile")
+    public ResponseEntity<Map<String, String>> updateUserProfile(@RequestBody UserUpdateRequestDto request,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String result = userService.updateUserProfile(userDetails.getUsername(), request);
+        return ResponseEntity.ok(Map.of("message", result));
     }
 }
