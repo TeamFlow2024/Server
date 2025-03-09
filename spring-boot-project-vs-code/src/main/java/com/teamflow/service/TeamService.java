@@ -1,5 +1,6 @@
 package com.teamflow.service;
 
+import com.teamflow.model.CalendarType;
 import com.teamflow.model.Team;
 import com.teamflow.model.TeamMembers;
 import com.teamflow.model.User;
@@ -8,6 +9,9 @@ import com.teamflow.repository.TeamMembersRepository;
 import com.teamflow.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.teamflow.model.Calendar;
+import com.teamflow.model.CalendarType;
+import com.teamflow.repository.CalendarRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -15,16 +19,24 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
     private final UserRepository userRepository;
+    private final CalendarRepository calendarRepository;
 
-    // 1️⃣ 팀 생성
     public Team createTeam(String teamName, String teamColor, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // 팀 캘린더 생성
+        Calendar calendar = new Calendar();
+        calendar.setType(CalendarType.TEAM);
+        calendar.setDescription(teamName + " 캘린더");
+        calendar = calendarRepository.save(calendar);
+
+        // 팀 생성 및 캘린더 연결 (🔑 추가된 부분!)
         Team team = new Team();
         team.setTeamName(teamName);
         team.setTeamColor(teamColor);
         team.setUser(user);
+        team.setCalendar(calendar); // <-- 이 부분이 필수입니다.
 
         return teamRepository.save(team);
     }
