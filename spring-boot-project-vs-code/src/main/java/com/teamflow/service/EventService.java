@@ -12,6 +12,7 @@ import com.teamflow.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +52,48 @@ public class EventService {
         List<Event> events = eventRepository.findAllByCalendarIn(calendars);
 
         return events.stream()
-                .map(this::convertToDto)
+                .map(event -> convertToDto(event))
+                .collect(Collectors.toList());
+
+    }
+
+    public EventResponseDto updateEvent(Long eventId, EventDto dto) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new RuntimeException("Event not found"));
+
+        if (dto.getTitle() != null)
+            event.setTitle(dto.getTitle());
+        if (dto.getStartTime() != null)
+            event.setStartTime(dto.getStartTime());
+        if (dto.getEndTime() != null)
+            event.setEndTime(dto.getEndTime());
+        if (dto.getColor() != null)
+            event.setColor(dto.getColor());
+
+        Event updatedEvent = eventRepository.save(event);
+        return convertToDto(updatedEvent);
+    }
+
+    public List<EventResponseDto> getAllEventsByCalendar(Long calendarId) {
+        Calendar calendar = calendarRepository.findById(calendarId)
+                .orElseThrow(() -> new RuntimeException("Calendar not found"));
+
+        List<Event> events = eventRepository.findAllByCalendar(calendar);
+
+        return events.stream()
+                .map(event -> convertToDto(event))
+                .collect(Collectors.toList());
+    }
+
+    // 🔥 추가된 코드 (캘린더 아이디 + 날짜로 이벤트 조회)
+    public List<EventResponseDto> getEventsByCalendarAndDate(Long calendarId, LocalDate date) {
+        Calendar calendar = calendarRepository.findById(calendarId)
+                .orElseThrow(() -> new RuntimeException("Calendar not found"));
+
+        List<Event> events = eventRepository.findAllByCalendarAndDate(calendar, date);
+
+        return events.stream()
+                .map(event -> convertToDto(event))
                 .collect(Collectors.toList());
     }
 

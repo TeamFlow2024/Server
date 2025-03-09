@@ -10,8 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Calendar {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long calendarId;
 
     @Enumerated(EnumType.STRING)

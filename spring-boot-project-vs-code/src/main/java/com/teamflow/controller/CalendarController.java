@@ -17,11 +17,6 @@ public class CalendarController {
 
     private final CalendarService calendarService;
 
-    @PostMapping
-    public Calendar createCalendar(@RequestBody CalendarDto dto) {
-        return calendarService.createCalendar(dto);
-    }
-
     @GetMapping
     public List<Calendar> getCalendars(@AuthenticationPrincipal User user) {
         return calendarService.getCalendarsForUser(user);
