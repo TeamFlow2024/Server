@@ -55,6 +55,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/user/join", "/api/auth/login").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        // ✅ 회의록 관련 API 접근 권한 설정
+                        .requestMatchers("/api/meeting-logs/**").authenticated() // 모든 회의록 API는 인증 필요
+                        .requestMatchers("/api/meeting-logs/upload-audio").hasAnyRole("USER", "ADMIN") // 음성 파일 업로드는
+                                                                                                       // USER 또는 ADMIN만
+                                                                                                       // 가능
                         .requestMatchers("/api/user/profile").authenticated()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // ✅ 여기서 주입받기
