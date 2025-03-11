@@ -2,11 +2,11 @@ package com.teamflow.service;
 
 import com.teamflow.dto.EventDto;
 import com.teamflow.dto.EventResponseDto;
-import com.teamflow.model.Calendar;
+import com.teamflow.model.Schedule;
 import com.teamflow.model.Event;
 import com.teamflow.model.Team;
 import com.teamflow.model.User;
-import com.teamflow.repository.CalendarRepository;
+import com.teamflow.repository.ScheduleRepository;
 import com.teamflow.repository.EventRepository;
 import com.teamflow.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,15 +21,15 @@ import java.util.stream.Collectors;
 public class EventService {
 
     private final EventRepository eventRepository;
-    private final CalendarRepository calendarRepository;
+    private final ScheduleRepository scheduleRepository;
     private final TeamRepository teamRepository;
 
-    public EventResponseDto addEvent(Long calendarId, EventDto dto) {
-        Calendar calendar = calendarRepository.findById(calendarId)
-                .orElseThrow(() -> new RuntimeException("Calendar not found"));
+    public EventResponseDto addEvent(Long scheduleId, EventDto dto) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new RuntimeException("Schedule not found"));
 
         Event event = new Event();
-        event.setCalendar(calendar);
+        event.setSchedule(schedule);
         event.setTitle(dto.getTitle());
         event.setStartTime(dto.getStartTime());
         event.setEndTime(dto.getEndTime());
@@ -41,15 +41,15 @@ public class EventService {
 
     public List<EventResponseDto> getEventsForUser(User user) {
         // 사용자의 개인 캘린더 추가
-        List<Calendar> calendars = calendarRepository.findByUser(user)
+        List<Schedule> schedules = scheduleRepository.findByUser(user)
                 .map(List::of)
                 .orElseGet(List::of);
 
         // 사용자 소속 팀의 팀 캘린더 추가
         List<Team> teams = teamRepository.findAllByTeamNameIn(user.getMyTeam());
-        calendars.addAll(calendarRepository.findAllByTeamIn(teams));
+        schedules.addAll(scheduleRepository.findAllByTeamIn(teams));
 
-        List<Event> events = eventRepository.findAllByCalendarIn(calendars);
+        List<Event> events = eventRepository.findAllByScheduleIn(schedules);
 
         return events.stream()
                 .map(event -> convertToDto(event))
@@ -74,11 +74,11 @@ public class EventService {
         return convertToDto(updatedEvent);
     }
 
-    public List<EventResponseDto> getAllEventsByCalendar(Long calendarId) {
-        Calendar calendar = calendarRepository.findById(calendarId)
-                .orElseThrow(() -> new RuntimeException("Calendar not found"));
+    public List<EventResponseDto> getAllEventsBySchedule(Long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new RuntimeException("Schedule not found"));
 
-        List<Event> events = eventRepository.findAllByCalendar(calendar);
+        List<Event> events = eventRepository.findAllBySchedule(schedule);
 
         return events.stream()
                 .map(event -> convertToDto(event))
@@ -86,11 +86,11 @@ public class EventService {
     }
 
     // 🔥 추가된 코드 (캘린더 아이디 + 날짜로 이벤트 조회)
-    public List<EventResponseDto> getEventsByCalendarAndDate(Long calendarId, LocalDate date) {
-        Calendar calendar = calendarRepository.findById(calendarId)
-                .orElseThrow(() -> new RuntimeException("Calendar not found"));
+    public List<EventResponseDto> getEventsByScheduleAndDate(Long scheduleId, LocalDate date) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new RuntimeException("Schedule not found"));
 
-        List<Event> events = eventRepository.findAllByCalendarAndDate(calendar, date);
+        List<Event> events = eventRepository.findAllByScheduleAndDate(schedule, date);
 
         return events.stream()
                 .map(event -> convertToDto(event))
@@ -104,7 +104,7 @@ public class EventService {
         dto.setStartTime(event.getStartTime());
         dto.setEndTime(event.getEndTime());
         dto.setColor(event.getColor());
-        dto.setCalendarId(event.getCalendar().getCalendarId());
+        dto.setScheduleId(event.getSchedule().getScheduleId());
         return dto;
     }
 }

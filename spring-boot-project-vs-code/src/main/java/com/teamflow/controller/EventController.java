@@ -19,9 +19,9 @@ public class EventController {
 
     private final EventService eventService;
 
-    @PostMapping("/{calendarId}")
-    public EventResponseDto createEvent(@PathVariable Long calendarId, @RequestBody EventDto dto) {
-        return eventService.addEvent(calendarId, dto);
+    @PostMapping("/{scheduleId}")
+    public EventResponseDto createEvent(@PathVariable Long scheduleId, @RequestBody EventDto dto) {
+        return eventService.addEvent(scheduleId, dto);
     }
 
     @GetMapping
@@ -34,16 +34,16 @@ public class EventController {
         return eventService.updateEvent(eventId, dto);
     }
 
-    @GetMapping("/calendar/{calendarId}")
-    public List<EventResponseDto> getAllEventsByCalendar(@PathVariable Long calendarId) {
-        return eventService.getAllEventsByCalendar(calendarId);
+    @GetMapping("/schedule/{scheduleId}")
+    public List<EventResponseDto> getAllEventsBySchedule(@PathVariable Long scheduleId) {
+        return eventService.getAllEventsBySchedule(scheduleId);
     }
 
     // 🔥 추가된 코드 (캘린더 아이디 + 날짜로 조회)
-    @GetMapping("/{calendarId}/{date}")
-    public List<EventResponseDto> getEventsByDateAndCalendar(
-            @PathVariable Long calendarId,
+    @GetMapping("/{scheduleId}/{date}")
+    public List<EventResponseDto> getEventsByDateAndSchedule(
+            @PathVariable Long scheduleId,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-        return eventService.getEventsByCalendarAndDate(calendarId, date);
+        return eventService.getEventsByScheduleAndDate(scheduleId, date);
     }
 }
