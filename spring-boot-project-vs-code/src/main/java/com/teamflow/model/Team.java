@@ -11,6 +11,7 @@ import lombok.Setter;
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "team_id")
     private Long teamId;
 
     private String teamName;
@@ -21,6 +22,6 @@ public class Team {
     private User user;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "calendar_id")
-    private Calendar calendar;
+    @JoinColumn(name = "schedule_id")
+    private com.teamflow.model.Schedule schedule;
 }

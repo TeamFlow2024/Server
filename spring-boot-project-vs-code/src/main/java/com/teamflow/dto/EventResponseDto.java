@@ -12,5 +12,5 @@ public class EventResponseDto {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private String color;
-    private Long calendarId;
+    private Long scheduleId;
 }

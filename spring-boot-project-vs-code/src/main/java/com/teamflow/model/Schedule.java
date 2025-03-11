@@ -1,22 +1,22 @@
 package com.teamflow.model;
 
-import com.teamflow.model.CalendarType;
+import com.teamflow.model.ScheduleType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Calendar")
+@Table(name = "Schedule")
 @Getter
 @Setter
-public class Calendar {
+public class Schedule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long calendarId;
+    private Long scheduleId;
 
     @Enumerated(EnumType.STRING)
-    private CalendarType type; // PERSONAL, TEAM
+    private ScheduleType type; // PERSONAL, TEAM
 
     @ManyToOne
     private User user; // 개인용 (팀 캘린더면 null)

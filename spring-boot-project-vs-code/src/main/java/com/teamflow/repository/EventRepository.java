@@ -1,6 +1,6 @@
 package com.teamflow.repository;
 
-import com.teamflow.model.Calendar;
+import com.teamflow.model.Schedule;
 import com.teamflow.model.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,11 +13,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
-    List<Event> findAllByCalendar(Calendar calendar);
+    List<Event> findAllBySchedule(Schedule schedule);
 
-    List<Event> findAllByCalendarIn(List<Calendar> calendars);
+    List<Event> findAllByScheduleIn(List<Schedule> schedules);
 
     // 🔥 추가된 코드 (특정 날짜에 해당하는 이벤트 조회)
-    @Query("SELECT e FROM Event e WHERE e.calendar = :calendar AND DATE(e.startTime) <= :date AND DATE(e.endTime) >= :date")
-    List<Event> findAllByCalendarAndDate(@Param("calendar") Calendar calendar, @Param("date") LocalDate date);
+    @Query("SELECT e FROM Event e WHERE e.schedule = :schedule AND DATE(e.startTime) <= :date AND DATE(e.endTime) >= :date")
+    List<Event> findAllByScheduleAndDate(@Param("schedule") Schedule schedule, @Param("date") LocalDate date);
 }

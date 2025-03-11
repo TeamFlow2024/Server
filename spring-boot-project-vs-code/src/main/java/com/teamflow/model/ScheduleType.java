@@ -1,6 +1,6 @@
 package com.teamflow.model;
 
-public enum CalendarType {
+public enum ScheduleType {
     PERSONAL,
-    TEAM
+    TEAM;
 }

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CalendarDto {
+public class ScheduleDto {
     private String type; // "PERSONAL" or "TEAM"
     private Long userId;
     private Long teamId;

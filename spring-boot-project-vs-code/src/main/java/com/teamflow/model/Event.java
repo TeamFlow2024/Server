@@ -2,6 +2,7 @@ package com.teamflow.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +16,7 @@ public class Event {
     private Long eventId;
 
     @ManyToOne
-    private Calendar calendar;
+    private Schedule schedule;
 
     private String title;
     private LocalDateTime startTime;
