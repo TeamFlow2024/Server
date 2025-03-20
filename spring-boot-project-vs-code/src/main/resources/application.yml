@@ -4,8 +4,8 @@ server:
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/teamflowproject
-    username: root
-    password: woni0211!
+    username: admin
+    password: 1111
     driver-class-name: com.mysql.cj.jdbc.Driver
   security:
     user:
