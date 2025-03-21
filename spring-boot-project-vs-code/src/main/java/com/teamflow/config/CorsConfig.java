@@ -14,7 +14,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://3.37.129.52") // EC2 퍼블릭 IP (프론트엔드 주소)
+                        .allowedOrigins(
+                                "http://localhost:3000",
+                                "http://3.37.129.52",
+                                "http://3.37.129.52:3000") // EC2 퍼블릭 IP (프론트엔드 주소)
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
