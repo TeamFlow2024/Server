@@ -41,9 +41,9 @@ public class UserService {
         return userRepository.findById(id).map(UserResponseDto::new);
     }
 
-    // 회원 정보 조회 (username 기준)
-    public Optional<UserResponseDto> getUserProfile(String username) {
-        return userRepository.findByUsername(username).map(UserResponseDto::new);
+    // 로그인 아이디(userId)를 기준으로 조회
+    public Optional<UserResponseDto> getUserProfile(String userId) {
+        return userRepository.findByUserId(userId).map(UserResponseDto::new);
     }
 
     // ✅ 회원 정보 수정 기능 (수정하고 싶은 필드만 변경 가능)
