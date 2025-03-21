@@ -18,6 +18,9 @@ public class User {
   private Long id; // 유저 아이디
 
   @Column(unique = true, nullable = false)
+  private String userId; // 로그인 시 사용하는 유저 아이디
+
+  @Column(unique = true, nullable = false)
   private String username; // 닉네임
 
   @JsonIgnore

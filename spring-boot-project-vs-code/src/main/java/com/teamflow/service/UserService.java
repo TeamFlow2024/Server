@@ -23,13 +23,13 @@ public class UserService {
 
     // 회원가입 처리
     public String registerUser(UserRequestDto userDto) {
-        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
-            return "이미 존재하는 사용자 이름입니다.";
+        if (userRepository.findByUserId(userDto.getUserId()).isPresent()) {
+            return "이미 존재하는 사용자 아이디입니다.";
         }
 
         User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setId(userDto.getId());
+        user.setUserId(userDto.getUserId()); // 로그인 아이디 설정
+        user.setUsername(userDto.getUsername()); // 닉네임 설정
         user.setPassword(passwordEncoder.encode(userDto.getPassword())); // ✅ 비밀번호 암호화
 
         userRepository.save(user);

@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserRequestDto {
-    private Long id; // ✅ userId 대신 id 사용
-    private String username;
+    private String userId; // 로그인 시 사용할 아이디
+    private String username; // 닉네임
     private String password;
 }
