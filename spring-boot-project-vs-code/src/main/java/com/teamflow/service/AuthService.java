@@ -25,7 +25,7 @@ public class AuthService {
 
     // 로그인 처리 & JWT 토큰 생성
     public String login(LoginRequestDto loginDto) {
-        Optional<User> userOptional = userRepository.findByUsername(loginDto.getUsername());
+        Optional<User> userOptional = userRepository.findByUserId(loginDto.getUserId());
 
         if (userOptional.isEmpty()) {
             return null;
@@ -39,6 +39,7 @@ public class AuthService {
         }
 
         // ✅ 로그인 성공 -> JWT 토큰 발급
-        return jwtTokenProvider.createToken(user.getUsername());
+        return jwtTokenProvider.createToken(user.getUserId());
     }
+
 }
