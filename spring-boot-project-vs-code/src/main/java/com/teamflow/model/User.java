@@ -34,4 +34,6 @@ public class User {
   private List<String> myTeam;
 
   private String profile;
+
+  private String myColor;
 }

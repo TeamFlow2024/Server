@@ -52,12 +52,12 @@ public class UserService {
                 .map(user -> {
                     boolean updated = false; // ✅ 수정 여부 체크
 
-                    if (request.getEmail() != null && !request.getEmail().isEmpty()) {
-                        user.setEmail(request.getEmail());
+                    if (request.getUsername() != null && !request.getUsername().isEmpty()) {
+                        user.setUsername(request.getUsername());
                         updated = true;
                     }
-                    if (request.getPassword() != null && !request.getPassword().isEmpty()) {
-                        user.setPassword(passwordEncoder.encode(request.getPassword()));
+                    if (request.getEmail() != null && !request.getEmail().isEmpty()) {
+                        user.setEmail(request.getEmail());
                         updated = true;
                     }
                     if (request.getPosition() != null && !request.getPosition().isEmpty()) {
@@ -68,8 +68,8 @@ public class UserService {
                         user.setContactTime(request.getContactTime());
                         updated = true;
                     }
-                    if (request.getMyTeam() != null && !request.getMyTeam().isEmpty()) {
-                        user.setMyTeam(request.getMyTeam());
+                    if (request.getMyColor() != null && !request.getMyColor().isEmpty()) {
+                        user.setMyColor(request.getMyColor());
                         updated = true;
                     }
                     if (request.getProfile() != null && !request.getProfile().isEmpty()) {
