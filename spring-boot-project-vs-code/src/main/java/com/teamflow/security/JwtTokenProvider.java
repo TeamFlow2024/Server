@@ -2,7 +2,6 @@ package com.teamflow.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -19,28 +18,20 @@ public class JwtTokenProvider {
         this.secretKey = Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8)); // ✅ SecretKey 생성
     }
 
-    public String createToken(String username) {
+    // ✅ 토큰 생성 시 userId로 설정
+    public String createToken(String userId) {
         Date now = new Date();
-        Date validity = new Date(now.getTime() + 3600000); // 1시간 후 만료
+        Date validity = new Date(now.getTime() + EXPIRATION_TIME); // 1시간 후 만료
 
         return Jwts.builder()
-                .setSubject(username) // ✅ 여기서 username을 제대로 설정해야 함!
+                .setSubject(userId) // ✅ userId로 설정
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(secretKey)
                 .compact();
     }
 
-    // public boolean validateToken(String token) {
-    // try {
-    // Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token); // ✅ 최신
-    // 방식 적용
-    // return true;
-    // } catch (Exception e) {
-    // return false;
-    // }
-    // }
-
+    // ✅ 토큰 검증 로직 유지 (변경 불필요)
     public boolean validateToken(String token) {
         try {
             System.out.println("Validating Token: " + token); // ✅ 토큰 확인
@@ -53,12 +44,13 @@ public class JwtTokenProvider {
         }
     }
 
-    public String getUsernameFromToken(String token) {
+    // ✅ userId를 반환하도록 수정
+    public String getUserIdFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject();
+                .getSubject(); // userId로 설정된 값 반환
     }
 }

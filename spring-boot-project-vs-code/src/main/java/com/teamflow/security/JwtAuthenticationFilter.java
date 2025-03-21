@@ -42,25 +42,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        // 🚀 토큰에서 사용자 이름 추출
-        String username = jwtTokenProvider.getUsernameFromToken(token);
-        System.out.println("✅ [JWT 필터] 토큰에서 추출된 사용자: " + username);
+        // 🚀 토큰에서 userId 추출
+        String userId = jwtTokenProvider.getUserIdFromToken(token);
+        System.out.println("✅ [JWT 필터] 토큰에서 추출된 userId: " + userId);
 
-        // 🚀 DB에서 사용자 정보 조회
+        // 🚀 DB에서 사용자 정보 조회 (userId 기준으로)
         UserDetails userDetails;
         try {
-            userDetails = userDetailsService.loadUserByUsername(username);
+            userDetails = userDetailsService.loadUserByUsername(userId); // ✅ userId로 조회됨
         } catch (Exception e) {
-            System.out.println("❌ [JWT 필터] 사용자 정보 조회 실패: " + username);
+            System.out.println("❌ [JWT 필터] 사용자 정보 조회 실패: " + userId);
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 🚀 사용자 인증 객체 생성 & `SecurityContextHolder`에 저장
+        // 🚀 사용자 인증 객체 생성 & SecurityContextHolder에 저장
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
                 userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        System.out.println("✅ [JWT 필터] 인증 성공 - 사용자: " + username);
+        System.out.println("✅ [JWT 필터] 인증 성공 - 사용자 userId: " + userId);
 
         filterChain.doFilter(request, response);
     }
