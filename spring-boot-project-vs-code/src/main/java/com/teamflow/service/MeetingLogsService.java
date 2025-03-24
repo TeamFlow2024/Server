@@ -7,6 +7,7 @@ import com.teamflow.repository.MeetingLogsRepository;
 import com.teamflow.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.LocalDate;
 import java.util.List;
