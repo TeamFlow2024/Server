@@ -24,4 +24,9 @@ public class Team {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "schedule_id")
     private com.teamflow.model.Schedule schedule;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference // 순환 참조 방지 (또는 @JsonIgnoreProperties 사용 가능)
+    private java.util.List<TeamMembers> teamMembers = new java.util.ArrayList<>();
+
 }

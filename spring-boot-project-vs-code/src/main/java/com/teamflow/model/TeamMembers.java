@@ -14,6 +14,7 @@ public class TeamMembers {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "teamId", nullable = false)
     private Team team;
 
