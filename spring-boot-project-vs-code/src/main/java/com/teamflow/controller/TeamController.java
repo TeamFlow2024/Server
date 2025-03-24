@@ -20,7 +20,14 @@ public class TeamController {
     // 🟢 팀 생성 (POST /api/teams)
     @PostMapping
     public ResponseEntity<?> createTeam(@RequestBody TeamRequest request) {
-        Team team = teamService.createTeam(request.getTeamName(), request.getTeamColor(), request.getUserId());
+        Team team = teamService.createTeam(
+                request.getTeamName(),
+                request.getTeamColor(),
+                request.getOwnerId(),
+                request.getMemberIds(),
+                request.getRoles(),
+                request.getMemberColors());
+
         return ResponseEntity.ok(Map.of("teamId", team.getTeamId(), "message", "팀이 생성되었습니다."));
     }
 
@@ -31,11 +38,15 @@ public class TeamController {
         return ResponseEntity.ok(team);
     }
 
-    // 🔵 팀 멤버 추가 (PATCH /api/teams/{teamId}/members)
+    // 🔵 여러 팀 멤버 추가 (PATCH /api/teams/{teamId}/members)
     @PatchMapping("/{teamId}/members")
-    public ResponseEntity<?> addTeamMember(@PathVariable Long teamId, @RequestBody TeamMemberRequest request) {
-        TeamMembers teamMember = teamService.addTeamMember(teamId, request.getUserId(), request.getRole(),
-                request.getMemberColor());
-        return ResponseEntity.ok(Map.of("message", "팀 멤버가 추가되었습니다."));
+    public ResponseEntity<?> addTeamMembers(@PathVariable Long teamId, @RequestBody TeamMemberRequest request) {
+        teamService.addTeamMembers(
+                teamId,
+                request.getUserIds(),
+                request.getRoles(),
+                request.getMemberColors());
+
+        return ResponseEntity.ok(Map.of("message", "팀 멤버들이 추가되었습니다."));
     }
 }

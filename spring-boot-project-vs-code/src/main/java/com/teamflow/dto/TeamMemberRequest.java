@@ -1,10 +1,12 @@
 package com.teamflow.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
 public class TeamMemberRequest {
-    private Long userId;
-    private String role;
-    private String memberColor;
+    private List<Long> userIds;
+    private List<String> roles;
+    private List<String> memberColors;
 }

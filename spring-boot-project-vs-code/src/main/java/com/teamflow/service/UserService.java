@@ -28,9 +28,10 @@ public class UserService {
         }
 
         User user = new User();
-        user.setUserId(userDto.getUserId()); // 로그인 아이디 설정
-        user.setUsername(userDto.getUsername()); // 닉네임 설정
-        user.setPassword(passwordEncoder.encode(userDto.getPassword())); // ✅ 비밀번호 암호화
+        user.setUserId(userDto.getUserId());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        user.setEmail(userDto.getEmail()); // ✅ 이메일 저장
 
         userRepository.save(user);
         return "회원가입 성공!";
