@@ -40,8 +40,8 @@ public class UserController {
     }
 
     @PostMapping("/duplicate")
-    public ResponseEntity<?> checkDuplicateUsername(@RequestParam String username) {
-        boolean exists = UserService.existsByUserId(userId);
+    public ResponseEntity<?> checkDuplicateUserId(@RequestParam String userId) {
+        boolean exists = userService.existsByUserId(userId);
         if (exists) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 아이디입니다.");
         }
