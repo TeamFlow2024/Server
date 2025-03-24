@@ -24,29 +24,22 @@ public class TeamController {
                 request.getTeamName(),
                 request.getTeamColor(),
                 request.getOwnerId(),
-                request.getMemberIds(),
-                request.getRoles(),
-                request.getMemberColors());
+                request.getMemberIds());
 
         return ResponseEntity.ok(Map.of("teamId", team.getTeamId(), "message", "팀이 생성되었습니다."));
     }
 
-    // 🟡 팀 정보 조회 (GET /api/teams/{teamId})
+    // 🟡 팀 조회
     @GetMapping("/{teamId}")
     public ResponseEntity<?> getTeamById(@PathVariable Long teamId) {
         Team team = teamService.getTeamById(teamId);
         return ResponseEntity.ok(team);
     }
 
-    // 🔵 여러 팀 멤버 추가 (PATCH /api/teams/{teamId}/members)
+    // 🔵 팀 멤버 추가
     @PatchMapping("/{teamId}/members")
     public ResponseEntity<?> addTeamMembers(@PathVariable Long teamId, @RequestBody TeamMemberRequest request) {
-        teamService.addTeamMembers(
-                teamId,
-                request.getUserIds(),
-                request.getRoles(),
-                request.getMemberColors());
-
+        teamService.addTeamMembers(teamId, request.getUserIds());
         return ResponseEntity.ok(Map.of("message", "팀 멤버들이 추가되었습니다."));
     }
 }

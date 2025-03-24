@@ -9,8 +9,5 @@ public class TeamRequest {
     private String teamName;
     private String teamColor;
     private Long ownerId;
-
-    private List<Long> memberIds;
-    private List<String> roles;
-    private List<String> memberColors;
+    private List<String> memberIds;
 }

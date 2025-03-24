@@ -25,8 +25,7 @@ public class TeamService {
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
 
-    public Team createTeam(String teamName, String teamColor, Long ownerId, List<Long> memberIds, List<String> roles,
-            List<String> memberColors) {
+    public Team createTeam(String teamName, String teamColor, Long ownerId, List<String> memberIds) {
         User owner = userRepository.findById(ownerId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -40,25 +39,19 @@ public class TeamService {
         Team team = new Team();
         team.setTeamName(teamName);
         team.setTeamColor(teamColor);
-        team.setUser(owner); // 팀장
+        team.setUser(owner);
         team.setSchedule(schedule);
-        team = teamRepository.save(team); // 저장 후 teamId 사용
+        team = teamRepository.save(team);
 
-        // 팀 멤버 추가 (owner 포함 X)
-        for (int i = 0; i < memberIds.size(); i++) {
-            Long userId = memberIds.get(i);
-            String role = roles.get(i);
-            String color = memberColors.get(i);
+        // 팀 멤버 추가
+        for (String userId : memberIds) {
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found: " + userId));
 
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-            TeamMembers teamMember = new TeamMembers();
-            teamMember.setTeam(team);
-            teamMember.setUser(user);
-            teamMember.setRole(role);
-            teamMember.setMemberColor(color);
-            teamMembersRepository.save(teamMember);
+            TeamMembers member = new TeamMembers();
+            member.setTeam(team);
+            member.setUser(user);
+            teamMembersRepository.save(member);
         }
 
         return team;
@@ -71,25 +64,23 @@ public class TeamService {
     }
 
     // 3️⃣ 팀 멤버 추가
-    public List<TeamMembers> addTeamMembers(Long teamId, List<Long> userIds, List<String> roles,
-            List<String> memberColors) {
+    public List<TeamMembers> addTeamMembers(Long teamId, List<String> userIds) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new RuntimeException("Team not found"));
 
         List<TeamMembers> savedMembers = new java.util.ArrayList<>();
 
-        for (int i = 0; i < userIds.size(); i++) {
-            User user = userRepository.findById(userIds.get(i))
-                    .orElseThrow(() -> new RuntimeException("User not found"));
+        for (String userId : userIds) {
+            User user = userRepository.findByUserId(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found: " + userId));
 
-            TeamMembers teamMember = new TeamMembers();
-            teamMember.setTeam(team);
-            teamMember.setUser(user);
-            teamMember.setRole(roles.get(i));
-            teamMember.setMemberColor(memberColors.get(i));
-            savedMembers.add(teamMembersRepository.save(teamMember));
+            TeamMembers member = new TeamMembers();
+            member.setTeam(team);
+            member.setUser(user);
+            savedMembers.add(teamMembersRepository.save(member));
         }
 
         return savedMembers;
     }
+
 }
