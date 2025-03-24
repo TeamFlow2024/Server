@@ -37,6 +37,10 @@ public class UserService {
         return "회원가입 성공!";
     }
 
+    public boolean existsByUserId(String userId) {
+        return userRepository.findByUserId(userId).isPresent();
+    }
+
     // 회원 정보 조회 (ID 기준)
     public Optional<UserResponseDto> getUserById(Long id) {
         return userRepository.findById(id).map(UserResponseDto::new);
