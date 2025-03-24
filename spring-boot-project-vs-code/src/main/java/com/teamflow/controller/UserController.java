@@ -40,12 +40,23 @@ public class UserController {
     }
 
     @PostMapping("/duplicate")
-    public ResponseEntity<?> checkDuplicateUserId(@RequestParam String userId) {
+    public ResponseEntity<?> checkDuplicateUserId(@RequestBody Map<String, String> body) {
+        String userId = body.get("userId");
         boolean exists = userService.existsByUserId(userId);
         if (exists) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 아이디입니다.");
         }
         return ResponseEntity.ok("사용 가능한 아이디입니다.");
+    }
+
+    @PostMapping("/duplicate-email")
+    public ResponseEntity<?> checkDuplicateEmail(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
+        boolean exists = userService.existsByEmail(email);
+        if (exists) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 이메일입니다.");
+        }
+        return ResponseEntity.ok("사용 가능한 이메일입니다.");
     }
 
     // 회원 정보 조회 API (GET /api/user/profile)

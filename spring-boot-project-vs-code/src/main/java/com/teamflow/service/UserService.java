@@ -41,6 +41,10 @@ public class UserService {
         return userRepository.findByUserId(userId).isPresent();
     }
 
+    public boolean existsByEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
     // 회원 정보 조회 (ID 기준)
     public Optional<UserResponseDto> getUserById(Long id) {
         return userRepository.findById(id).map(UserResponseDto::new);

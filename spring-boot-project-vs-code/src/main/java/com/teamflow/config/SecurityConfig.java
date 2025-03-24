@@ -53,7 +53,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/user/join", "/api/auth/login", "/api/user/duplicate").permitAll()
+                        .requestMatchers("/api/user/join", "/api/auth/login", "/api/user/duplicate",
+                                "/api/user/duplicate-email")
+                        .permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // ✅ 회의록 관련 API 접근 권한 설정
                         .requestMatchers("/api/meeting-logs/**").authenticated() // 모든 회의록 API는 인증 필요
