@@ -71,16 +71,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/myTeam")
-public ResponseEntity<?> getMyTeams(@AuthenticationPrincipal UserDetails userDetails) {
-    if (userDetails == null) {
-        return ResponseEntity.status(401).body(Map.of("message", "인증되지 않았습니다."));
-    }
-
-    List<TeamResponseDto> myTeams = userService.getMyTeams(userDetails.getUsername());
-    return ResponseEntity.ok(myTeams);
-}
-
 
 
     // 회원 정보 수정 API (PATCH /api/user/profile)

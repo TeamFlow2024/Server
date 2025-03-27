@@ -8,6 +8,9 @@ import com.teamflow.dto.TeamMemberRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+import com.teamflow.dto.TeamResponseDto;
 
 import java.util.Map;
 
@@ -42,4 +45,15 @@ public class TeamController {
         teamService.addTeamMembers(teamId, request.getUserIds());
         return ResponseEntity.ok(Map.of("message", "팀 멤버들이 추가되었습니다."));
     }
+
+@GetMapping("/my")
+public ResponseEntity<?> getMyTeams(@AuthenticationPrincipal UserDetails userDetails) {
+    if (userDetails == null) {
+        return ResponseEntity.status(401).body(Map.of("message", "인증되지 않았습니다."));
+    }
+
+    List<TeamResponseDto> myTeams = userService.getMyTeams(userDetails.getUsername());
+    return ResponseEntity.ok(myTeams);
+}
+
 }
