@@ -15,7 +15,8 @@ import org.springframework.data.repository.query.Param;
 public interface TeamRepository extends JpaRepository<Team, Long> {
     List<Team> findAllByTeamNameIn(List<String> teamNames);
 
-    @Query("SELECT t FROM Team t LEFT JOIN FETCH t.teamMembers WHERE t.teamId = :teamId")
+    @Query("SELECT t FROM Team t LEFT JOIN FETCH t.teamMembers tm LEFT JOIN FETCH tm.user WHERE t.teamId = :teamId")
     Optional<Team> findByIdWithMembers(@Param("teamId") Long teamId);
+
 
 }
