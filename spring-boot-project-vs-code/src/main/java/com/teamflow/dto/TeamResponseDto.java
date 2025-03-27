@@ -2,6 +2,8 @@ package com.teamflow.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import com.teamflow.model.Team;
+
 
 @Getter
 @Setter
