@@ -18,13 +18,13 @@ public class UserResponseDto {
     private String profile;
     private String myColor;
 
-    public UserResponseDto(User user) {
+    public UserResponseDto(User user, List<Long> myTeam) {
         this.userId = user.getUserId();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.position = user.getPosition();
         this.contactTime = user.getContactTime();
-        this.myTeam = user.getMyTeam();
+        this.myTeam = myTeam;
         this.profile = user.getProfile();
         this.myColor = user.getMyColor();
     }

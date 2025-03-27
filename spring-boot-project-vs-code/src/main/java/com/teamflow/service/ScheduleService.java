@@ -48,7 +48,7 @@ public class ScheduleService {
         scheduleRepository.findByUser(user).ifPresent(schedules::add);
 
         // 사용자가 속한 팀 캘린더 추가 (팀 이름으로 조회)
-        List<Team> teams = teamRepository.findAllByTeamNameIn(user.getMyTeam());
+        List<Team> teams = teamRepository.findAllByTeamNameIn(user.getTeamMembers());
         schedules.addAll(scheduleRepository.findAllByTeamIn(teams));
 
         return schedules;
