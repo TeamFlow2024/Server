@@ -34,7 +34,7 @@ public class User {
   private String contactTime;
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-private List<TeamMembers> teamMembers = new ArrayList<>();
+  private List<TeamMembers> teamMembers = new ArrayList<>();
 
 
   private String profile;
