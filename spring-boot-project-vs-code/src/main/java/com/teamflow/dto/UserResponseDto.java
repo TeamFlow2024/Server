@@ -28,4 +28,16 @@ public class UserResponseDto {
         this.profile = user.getProfile();
         this.myColor = user.getMyColor();
     }
+
+    public UserResponseDto(User user) {
+        this.userId = user.getUserId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.position = user.getPosition();
+        this.contactTime = user.getContactTime();
+        this.profile = user.getProfile();
+        this.myColor = user.getMyColor();
+        this.myTeam = null; // or new ArrayList<>(); // 기본값 설정
+    }
+    
 }
