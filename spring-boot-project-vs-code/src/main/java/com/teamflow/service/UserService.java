@@ -4,6 +4,8 @@ import com.teamflow.dto.UserRequestDto;
 import com.teamflow.dto.UserResponseDto;
 import com.teamflow.dto.UserUpdateRequestDto;
 import com.teamflow.model.User;
+import com.teamflow.model.TeamMembers;
+
 import com.teamflow.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
