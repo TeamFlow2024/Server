@@ -31,10 +31,9 @@ public class User {
   private String position;
   private String contactTime;
 
-  @ElementCollection
-  @CollectionTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id"))
-  @Column(name = "team_name")
-  private List<String> myTeam;
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+private List<TeamMembers> teamMembers = new ArrayList<>();
+
 
   private String profile;
 

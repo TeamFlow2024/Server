@@ -14,7 +14,7 @@ public class UserResponseDto {
     private String email;
     private String position;
     private String contactTime;
-    private List<String> myTeam;
+    private List<Long> myTeam;
     private String profile;
     private String myColor;
 
