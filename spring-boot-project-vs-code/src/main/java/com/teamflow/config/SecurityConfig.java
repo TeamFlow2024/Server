@@ -53,17 +53,26 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/user/join", "/api/auth/login", "/api/user/duplicate",
-                                "/api/user/duplicate-email")
-                        .permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        // ✅ 회의록 관련 API 접근 권한 설정
-                        .requestMatchers("/api/meeting-logs/**").authenticated() // 모든 회의록 API는 인증 필요
-                        .requestMatchers("/api/meeting-logs/upload-audio").hasAnyRole("USER", "ADMIN") // 음성 파일 업로드는
-                                                                                                       // USER 또는 ADMIN만
-                                                                                                       // 가능
-                        .requestMatchers("/api/user/profile").authenticated()
-                        .anyRequest().authenticated())
+    .requestMatchers(
+        "/api/user/join",
+        "/api/user/duplicate",
+        "/api/user/duplicate-email",
+        "/api/auth/login",
+        "/swagger-ui/**",
+        "/v3/api-docs/**"
+    ).permitAll()
+    .requestMatchers(
+        "/api/user/**",
+        "/api/teams/**",
+        "/api/messages/**",
+        "/api/meeting-logs/**",
+        "/api/events/**",
+        "/api/channels/**"
+    ).authenticated()
+
+    // 🔒 그 외 요청은 거부
+    .anyRequest().denyAll()
+)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // ✅ 여기서 주입받기
 
         return http.build();
