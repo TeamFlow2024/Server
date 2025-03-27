@@ -70,19 +70,6 @@ public class UserService {
                 .map(TeamResponseDto::new)
                 .toList();
     }
-    
-
-    public List<TeamResponseDto> getMyTeams(String userId) {
-        User user = userRepository.findByUserId(userId)
-            .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-    
-        return user.getTeamMembers().stream()
-            .map(TeamMembers::getTeam)
-            .map(TeamResponseDto::new)
-            .toList();
-    }
-    
-    
 
     // ✅ 회원 정보 수정 기능 (수정하고 싶은 필드만 변경 가능)
     public String updateUserProfile(String userId, UserUpdateRequestDto request) {
