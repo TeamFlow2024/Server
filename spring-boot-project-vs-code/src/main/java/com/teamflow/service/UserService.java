@@ -57,7 +57,7 @@ public class UserService {
 
     // ✅ 회원 정보 수정 기능 (수정하고 싶은 필드만 변경 가능)
     public String updateUserProfile(String username, UserUpdateRequestDto request) {
-        return userRepository.findByUsername(username)
+        return userRepository.findByUserId(userId)
                 .map(user -> {
                     boolean updated = false; // ✅ 수정 여부 체크
 
