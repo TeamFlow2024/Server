@@ -71,16 +71,16 @@ public class UserController {
         }
     }
 
-    //내 정보 조회 API
-    @GetMapping("/me")
-public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping("/myTeam")
+public ResponseEntity<?> getMyTeams(@AuthenticationPrincipal UserDetails userDetails) {
     if (userDetails == null) {
         return ResponseEntity.status(401).body(Map.of("message", "인증되지 않았습니다."));
     }
 
-    UserResponseDto dto = userService.getMyInfo(userDetails.getUsername());
-    return ResponseEntity.ok(dto);
+    List<TeamResponseDto> myTeams = userService.getMyTeams(userDetails.getUsername());
+    return ResponseEntity.ok(myTeams);
 }
+
 
 
     // 회원 정보 수정 API (PATCH /api/user/profile)

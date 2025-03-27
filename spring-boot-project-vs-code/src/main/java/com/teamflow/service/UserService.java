@@ -57,18 +57,16 @@ public class UserService {
         return userRepository.findByUserId(userId).map(UserResponseDto::new);
     }
 
-    //내 정보 조회
-    public UserResponseDto getMyInfo(String userId) {
+    public List<TeamResponseDto> getMyTeams(String userId) {
         User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     
-        List<Long> myTeamIds = user.getTeamMembers().stream()
-                .map(tm -> tm.getTeam().getTeamId())
-                .distinct()
-                .toList();
-    
-        return new UserResponseDto(user, myTeamIds);
+        return user.getTeamMembers().stream()
+            .map(TeamMembers::getTeam)
+            .map(TeamResponseDto::new)
+            .toList();
     }
+    
     
 
     // ✅ 회원 정보 수정 기능 (수정하고 싶은 필드만 변경 가능)
