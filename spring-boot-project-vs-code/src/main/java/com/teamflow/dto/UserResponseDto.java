@@ -1,7 +1,7 @@
 package com.teamflow.dto;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
 import com.teamflow.model.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,10 @@ public class UserResponseDto {
         this.email = user.getEmail();
         this.position = user.getPosition();
         this.contactTime = user.getContactTime();
-        this.myTeam = user.getMyTeam();
+        this.myTeam = user.getTeamMembers().stream()
+                .map(tm -> tm.getTeam().getTeamName())
+                .distinct()
+                .collect(Collectors.toList());
         this.profile = user.getProfile();
         this.myColor = user.getMyColor();
     }

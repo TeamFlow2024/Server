@@ -1,8 +1,9 @@
 package com.teamflow.model;
 
 import java.util.List;
-
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,10 +32,10 @@ public class User {
   private String position;
   private String contactTime;
 
-  @ElementCollection
-  @CollectionTable(name = "user_teams", joinColumns = @JoinColumn(name = "user_id"))
-  @Column(name = "team_name")
-  private List<String> myTeam;
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @JsonManagedReference
+  private List<TeamMembers> teamMembers = new ArrayList<>();
+
 
   private String profile;
 

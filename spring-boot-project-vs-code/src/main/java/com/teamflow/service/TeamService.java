@@ -83,4 +83,20 @@ public class TeamService {
         return savedMembers;
     }
 
+    // ✅ 내가 속한 팀 ID 목록 가져오기
+    public List<Long> getTeamIdsByUserId(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+
+        List<TeamMembers> teamMemberships = user.getTeamMembers();
+
+        List<Long> teamIds = new java.util.ArrayList<>();
+        for (TeamMembers membership : teamMemberships) {
+            teamIds.add(membership.getTeam().getTeamId());
+        }
+
+        return teamIds;
+    }
+
+
 }

@@ -46,7 +46,11 @@ public class EventService {
                 .orElseGet(List::of);
 
         // 사용자 소속 팀의 팀 캘린더 추가
-        List<Team> teams = teamRepository.findAllByTeamNameIn(user.getMyTeam());
+        List<Team> teams = user.getTeamMembers().stream()
+    .map(tm -> tm.getTeam())
+    .distinct()
+    .collect(Collectors.toList());
+
         schedules.addAll(scheduleRepository.findAllByTeamIn(teams));
 
         List<Event> events = eventRepository.findAllByScheduleIn(schedules);
