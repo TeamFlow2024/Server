@@ -8,6 +8,8 @@ import com.teamflow.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.security.access.prepost.PreAuthorize;
+import com.teamflow.repository.TeamMembersRepository; // ✅ 수정
+import com.teamflow.repository.UserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,13 +19,22 @@ import java.util.List;
 public class MeetingLogsService {
     private final MeetingLogsRepository meetingLogsRepository;
     private final TeamRepository teamRepository;
+    private final TeamMembersRepository teamMembersRepository; // ✅ 추가
+    private final UserRepository userRepository;
 
     // 회의록 생성
-    @PreAuthorize("hasAnyRole('OWNER', 'MEMBER')") // 인증된 사용자만 접근 가능
-    public MeetingLogs createMeetingLog(MeetingLogsDto dto) {
+    public MeetingLogs createMeetingLog(MeetingLogsDto dto, String currentUserId) {
+        // 1. 현재 유저가 해당 팀의 멤버인지 확인
+        boolean isTeamMember = teamMembersRepository.existsByTeam_TeamIdAndUser_UserId(dto.getTeamId(), currentUserId); // ✅ 수정
+        if (!isTeamMember) {
+            throw new RuntimeException("이 팀에 속한 멤버가 아닙니다."); // ✅ 수정
+        }
+
+        // 2. 팀 엔티티 조회
         Team team = teamRepository.findById(dto.getTeamId())
                 .orElseThrow(() -> new IllegalArgumentException("팀이 존재하지 않습니다."));
 
+        // 3. 회의록 저장
         MeetingLogs log = new MeetingLogs();
         log.setTeam(team);
         log.setTitle(dto.getTitle());

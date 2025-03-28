@@ -6,6 +6,8 @@ import com.teamflow.service.MeetingLogsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal; 
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -17,8 +19,10 @@ public class MeetingLogsController {
 
     // 회의록 생성 (날짜 및 시작 시간 포함)
     @PostMapping
-    public ResponseEntity<MeetingLogs> createMeetingLog(@RequestBody MeetingLogsDto dto) {
-        MeetingLogs log = meetingLogsService.createMeetingLog(dto);
+    public ResponseEntity<MeetingLogs> createMeetingLog(@RequestBody MeetingLogsDto dto,
+                                                        @AuthenticationPrincipal UserDetails userDetails) { // ✅ 수정
+        String currentUserId = userDetails.getUsername(); // ✅ userId 추출
+        MeetingLogs log = meetingLogsService.createMeetingLog(dto, currentUserId); // ✅ userId 전달
         return ResponseEntity.ok(log);
     }
 
