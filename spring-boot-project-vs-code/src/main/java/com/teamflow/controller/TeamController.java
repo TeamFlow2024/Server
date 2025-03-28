@@ -50,10 +50,16 @@ public class TeamController {
 
     // 🔵 팀 멤버 추가
     @PatchMapping("/{teamId}/members")
-    public ResponseEntity<?> addTeamMembers(@PathVariable Long teamId, @RequestBody TeamMemberRequest request) {
-        teamService.addTeamMembers(teamId, request.getUserIds());
+    public ResponseEntity<?> addTeamMembers(@PathVariable Long teamId,
+                                            @RequestBody TeamMemberRequest request,
+                                            HttpServletRequest httpRequest) {
+        String token = httpRequest.getHeader("Authorization").substring(7);
+        String requesterUserId = jwtTokenProvider.getUserIdFromToken(token);
+
+        teamService.addTeamMembers(teamId, request.getUserIds(), requesterUserId);
         return ResponseEntity.ok(Map.of("message", "팀 멤버들이 추가되었습니다."));
     }
+
 
     // 🔴 내가 속한 팀 ID 목록 조회 (GET /api/teams/my)
     @GetMapping("/my")

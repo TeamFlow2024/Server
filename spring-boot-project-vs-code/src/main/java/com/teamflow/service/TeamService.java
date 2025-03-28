@@ -81,24 +81,29 @@ public class TeamService {
     }
 
     // 3️⃣ 팀 멤버 추가
-    public List<TeamMembers> addTeamMembers(Long teamId, List<String> userIds) {
+    public List<TeamMembers> addTeamMembers(Long teamId, List<String> userIds, String requesterUserId) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new RuntimeException("Team not found"));
-
-        List<TeamMembers> savedMembers = new java.util.ArrayList<>();
-
+    
+        // 🔐 오너 검증
+        if (!team.getUser().getUserId().equals(requesterUserId)) {
+            throw new RuntimeException("권한이 없습니다. 이 팀의 오너가 아닙니다.");
+        }
+    
+        List<TeamMembers> savedMembers = new ArrayList<>();
         for (String userId : userIds) {
             User user = userRepository.findByUserId(userId)
                     .orElseThrow(() -> new RuntimeException("User not found: " + userId));
-
             TeamMembers member = new TeamMembers();
             member.setTeam(team);
             member.setUser(user);
+            member.setRole("MEMBER");
+            member.setProfile(user.getProfile() != null ? user.getProfile() : "default_profile.png");
             savedMembers.add(teamMembersRepository.save(member));
         }
-
         return savedMembers;
     }
+    
 
     // ✅ 내가 속한 팀 ID 목록 가져오기
     public List<TeamSummaryDto> getTeamSummariesByUserId(String userId) {
