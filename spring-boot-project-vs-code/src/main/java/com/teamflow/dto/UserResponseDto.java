@@ -36,7 +36,7 @@ public class UserResponseDto {
         this.position = user.getPosition();
         this.contactTime = user.getContactTime();
         this.myTeam = user.getTeamMembers().stream()
-                .map(tm -> tm.getTeam().getTeamName())
+            .map(tm -> tm.getTeam().getTeamId()) 
                 .distinct()
                 .collect(Collectors.toList());
         this.profile = user.getProfile();
