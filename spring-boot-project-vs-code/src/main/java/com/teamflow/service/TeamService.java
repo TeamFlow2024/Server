@@ -25,9 +25,10 @@ public class TeamService {
     private final UserRepository userRepository;
     private final ScheduleRepository scheduleRepository;
 
-    public Team createTeam(String teamName, String teamColor, Long ownerId, List<String> memberIds) {
-        User owner = userRepository.findById(ownerId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public Team createTeam(String teamName, String teamColor, String ownerUserId, List<String> memberIds){
+        User owner = userRepository.findByUserId(ownerUserId)
+        .orElseThrow(() -> new RuntimeException("User not found: " + ownerUserId));
+
 
         // 팀 캘린더 생성
         Schedule schedule = new Schedule();
@@ -39,20 +40,21 @@ public class TeamService {
         Team team = new Team();
         team.setTeamName(teamName);
         team.setTeamColor(teamColor);
-        team.setUser(owner);
+        team.setUser(owner); // 🔥 오너 지정
         team.setSchedule(schedule);
         team = teamRepository.save(team);
 
-        // 팀 멤버 추가
-        for (String userId : memberIds) {
-            User user = userRepository.findByUserId(userId)
-                    .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+        // 멤버 추가
+        for (String memberUserId : memberIds) {
+            User member = userRepository.findByUserId(memberUserId)
+                    .orElseThrow(() -> new RuntimeException("User not found: " + memberUserId));
 
-            TeamMembers member = new TeamMembers();
-            member.setTeam(team);
-            member.setUser(user);
-            teamMembersRepository.save(member);
+            TeamMembers teamMember = new TeamMembers();
+            teamMember.setTeam(team);
+            teamMember.setUser(member);  // ✅ 여기서 user → member 로 변수명 수정
+            teamMembersRepository.save(teamMember);
         }
+
 
         return team;
     }

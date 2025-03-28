@@ -8,6 +8,6 @@ import lombok.Data;
 public class TeamRequest {
     private String teamName;
     private String teamColor;
-    private Long ownerId;
+    private String ownerId;
     private List<String> memberIds;
 }

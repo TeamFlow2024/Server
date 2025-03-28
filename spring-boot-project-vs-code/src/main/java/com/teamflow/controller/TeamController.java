@@ -25,11 +25,12 @@ public class TeamController {
         Team team = teamService.createTeam(
                 request.getTeamName(),
                 request.getTeamColor(),
-                request.getOwnerId(),
+                request.getOwnerId(),  // 이게 이제 String (userId) 여야 함
                 request.getMemberIds());
 
         return ResponseEntity.ok(Map.of("teamId", team.getTeamId(), "message", "팀이 생성되었습니다."));
     }
+
 
     // 🟡 팀 조회
     @GetMapping("/{teamId}")
