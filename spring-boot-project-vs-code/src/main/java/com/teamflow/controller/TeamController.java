@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 import com.teamflow.dto.TeamResponseDto;
 import com.teamflow.dto.TeamSummaryDto;
-
+import jakarta.servlet.http.HttpServletRequest;
+import com.teamflow.security.JwtTokenProvider;
 
 
 @RestController
@@ -22,6 +23,8 @@ import com.teamflow.dto.TeamSummaryDto;
 public class TeamController {
     private final TeamService teamService;
     private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
+
 
     // 🟢 팀 생성 (POST /api/teams)
     @PostMapping
@@ -54,8 +57,17 @@ public class TeamController {
 
     // 🔴 내가 속한 팀 ID 목록 조회 (GET /api/teams/my)
     @GetMapping("/my")
-    public ResponseEntity<?> getMyTeams(@RequestHeader("userId") String userId) {
+    public ResponseEntity<?> getMyTeams(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(Map.of("message", "토큰이 유효하지 않습니다."));
+        }
+    
+        String token = bearerToken.substring(7); // "Bearer " 이후 토큰 값만 추출
+        String userId = jwtTokenProvider.getUserIdFromToken(token);
+    
         List<TeamSummaryDto> myTeams = teamService.getTeamSummariesByUserId(userId);
         return ResponseEntity.ok(Map.of("myTeams", myTeams));
     }
+    
 }
