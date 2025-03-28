@@ -49,7 +49,7 @@ public class TeamService {
         ownerMember.setTeam(team);
         ownerMember.setUser(owner);
         ownerMember.setRole("OWNER");
-        ownerMember.setProfile(owner.getProfile()); // ✅ 프로필 경로 넣기
+        ownerMember.setProfile(owner.getProfile() != null ? owner.getProfile() : "default_profile.png"); // ✅ 프로필 경로 넣기
         teamMembersRepository.save(ownerMember);
 
     
@@ -62,7 +62,7 @@ public class TeamService {
             teamMember.setTeam(team);
             teamMember.setUser(member);
             teamMember.setRole("MEMBER"); // 일반 멤버
-            teamMember.setProfile(member.getProfile());
+            teamMember.setProfile(member.getProfile() != null ? member.getProfile() : "default_profile.png");
             teamMembersRepository.save(teamMember);
         }
     
