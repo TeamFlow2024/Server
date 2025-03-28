@@ -26,38 +26,49 @@ public class TeamService {
     private final ScheduleRepository scheduleRepository;
 
     public Team createTeam(String teamName, String teamColor, String ownerUserId, List<String> memberIds){
+        // 🔍 owner 조회 (userId 기반)
         User owner = userRepository.findByUserId(ownerUserId)
-        .orElseThrow(() -> new RuntimeException("User not found: " + ownerUserId));
-
-
-        // 팀 캘린더 생성
+                .orElseThrow(() -> new RuntimeException("User not found: " + ownerUserId));
+    
+        // 🗓️ 팀 캘린더 생성
         Schedule schedule = new Schedule();
         schedule.setType(ScheduleType.TEAM);
         schedule.setDescription(teamName + " 캘린더");
         schedule = scheduleRepository.save(schedule);
-
-        // 팀 생성
+    
+        // 🧩 팀 생성
         Team team = new Team();
         team.setTeamName(teamName);
         team.setTeamColor(teamColor);
-        team.setUser(owner); // 🔥 오너 지정
+        team.setUser(owner); // 팀 생성자(owner)
         team.setSchedule(schedule);
         team = teamRepository.save(team);
+    
+        // 🔥 [1] 오너도 팀 멤버로 등록
+        TeamMembers ownerMember = new TeamMembers();
+        ownerMember.setTeam(team);
+        ownerMember.setUser(owner);
+        ownerMember.setRole("OWNER");
+        ownerMember.setProfile(owner.getProfile()); // ✅ 프로필 경로 넣기
+        teamMembersRepository.save(ownerMember);
 
-        // 멤버 추가
+    
+        // 🔥 [2] 나머지 멤버들 추가
         for (String memberUserId : memberIds) {
             User member = userRepository.findByUserId(memberUserId)
                     .orElseThrow(() -> new RuntimeException("User not found: " + memberUserId));
-
+    
             TeamMembers teamMember = new TeamMembers();
             teamMember.setTeam(team);
-            teamMember.setUser(member);  // ✅ 여기서 user → member 로 변수명 수정
+            teamMember.setUser(member);
+            teamMember.setRole("MEMBER"); // 일반 멤버
+            teamMember.setProfile(member.getProfile());
             teamMembersRepository.save(teamMember);
         }
-
-
+    
         return team;
     }
+    
 
     // 2️⃣ 특정 팀 정보 조회
     public Team getTeamById(Long teamId) {

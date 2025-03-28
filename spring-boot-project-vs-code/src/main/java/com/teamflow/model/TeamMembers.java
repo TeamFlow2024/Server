@@ -23,6 +23,9 @@ public class TeamMembers {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
+    @Column(nullable = false)
     private String role;
-    private String memberColor;
+
+    @Column(nullable = false)
+    private String profile;
 }
