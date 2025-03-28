@@ -36,11 +36,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         System.out.println("🔍 [JWT 필터] 받은 토큰: " + token);
 
         // 🚀 토큰 검증
+        // 🚀 토큰 검증
         if (!jwtTokenProvider.validateToken(token)) {
             System.out.println("❌ [JWT 필터] 토큰 검증 실패");
-            filterChain.doFilter(request, response);
+
+            // 🔐 유효하지 않은 토큰이면 401 Unauthorized 응답
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"message\": \"Invalid or expired token\"}");
             return;
         }
+
 
         // 🚀 토큰에서 userId 추출
         String userId = jwtTokenProvider.getUserIdFromToken(token);

@@ -11,7 +11,7 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private final Key secretKey;
-    private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1시간
+    private final long EXPIRATION_TIME = 1000L * 60 * 60 * 24; // 24시간으로 늘리기
 
     public JwtTokenProvider() {
         String SECRET = "your-secret-key-your-secret-key-your-secret-key"; // 🔹 32바이트 이상 필요
