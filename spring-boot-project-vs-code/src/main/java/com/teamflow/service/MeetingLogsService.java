@@ -45,20 +45,20 @@ public class MeetingLogsService {
     }
 
     // 특정 팀의 모든 회의록 조회
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     public List<MeetingLogs> getMeetingLogsByTeam(Long teamId) {
         return meetingLogsRepository.findByTeam_TeamId(teamId);
     }
 
     // ✅ 특정 회의록 1개 조회 (logId 기준)
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     public MeetingLogs getMeetingLogById(Long logId) {
         return meetingLogsRepository.findById(logId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 회의록이 존재하지 않습니다."));
     }
 
     // 회의록 삭제
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    //@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public void deleteMeetingLog(Long logId) {
         meetingLogsRepository.deleteById(logId);
     }
