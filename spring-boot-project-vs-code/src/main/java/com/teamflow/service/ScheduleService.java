@@ -44,8 +44,8 @@ public class ScheduleService {
 
     public List<Schedule> getSchedulesForUser(User user) {
         List<Schedule> schedules = new ArrayList<>();
-
-        // 개인 캘린더 추가
+    
+        // 개인 캘린더
         scheduleRepository.findByUser(user).ifPresent(schedules::add);
 
         // 사용자가 속한 팀 캘린더 추가 (팀 이름으로 조회)
@@ -55,8 +55,9 @@ public class ScheduleService {
         .collect(Collectors.toList());
 
         schedules.addAll(scheduleRepository.findAllByTeamIn(teams));
-
+    
         return schedules;
     }
+    
 
 }

@@ -40,7 +40,7 @@ public class EventService {
     }
 
     public List<EventResponseDto> getEventsForUser(User user) {
-        // 사용자의 개인 캘린더 추가
+        // 사용자 개인 캘린더
         List<Schedule> schedules = scheduleRepository.findByUser(user)
                 .map(List::of)
                 .orElseGet(List::of);
@@ -52,14 +52,15 @@ public class EventService {
     .collect(Collectors.toList());
 
         schedules.addAll(scheduleRepository.findAllByTeamIn(teams));
-
+    
+        // 해당 스케줄에 연결된 이벤트들 반환
         List<Event> events = eventRepository.findAllByScheduleIn(schedules);
-
+    
         return events.stream()
-                .map(event -> convertToDto(event))
-                .collect(Collectors.toList());
-
+            .map(this::convertToDto)
+            .collect(Collectors.toList());
     }
+    
 
     public EventResponseDto updateEvent(Long eventId, EventDto dto) {
         Event event = eventRepository.findById(eventId)

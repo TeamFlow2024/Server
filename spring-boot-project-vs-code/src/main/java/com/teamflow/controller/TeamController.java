@@ -3,6 +3,7 @@ package com.teamflow.controller;
 import com.teamflow.model.Team;
 import com.teamflow.model.TeamMembers;
 import com.teamflow.service.TeamService;
+import com.teamflow.service.UserService;
 import com.teamflow.dto.TeamRequest;
 import com.teamflow.dto.TeamMemberRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TeamController {
     private final TeamService teamService;
+    private final UserService userService;
 
     // 🟢 팀 생성 (POST /api/teams)
     @PostMapping
@@ -49,5 +51,4 @@ public class TeamController {
         List<Long> myTeamIds = teamService.getTeamIdsByUserId(userId);
         return ResponseEntity.ok(Map.of("myTeamIds", myTeamIds));
     }
-
 }

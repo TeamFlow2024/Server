@@ -4,11 +4,16 @@ import com.teamflow.dto.UserRequestDto;
 import com.teamflow.dto.UserResponseDto;
 import com.teamflow.dto.UserUpdateRequestDto;
 import com.teamflow.model.User;
+import com.teamflow.model.TeamMembers;
+
 import com.teamflow.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import java.util.List;
+import com.teamflow.dto.TeamResponseDto;
+import com.teamflow.model.Team;
 
 //
 @Service
@@ -53,6 +58,18 @@ public class UserService {
     // 로그인 아이디(userId)를 기준으로 조회
     public Optional<UserResponseDto> getUserProfile(String userId) {
         return userRepository.findByUserId(userId).map(UserResponseDto::new);
+    }
+
+    public List<TeamResponseDto> getMyTeams(String userId) {
+        User user = userRepository.findWithTeamsByUserId(userId)
+        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+    
+        return user.getTeamMembers().stream()
+                .map(TeamMembers::getTeam)
+                .distinct()
+                .map(TeamResponseDto::new)
+                .toList();
     }
 
     // ✅ 회원 정보 수정 기능 (수정하고 싶은 필드만 변경 가능)

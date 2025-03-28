@@ -71,6 +71,8 @@ public class UserController {
         }
     }
 
+
+
     // 회원 정보 수정 API (PATCH /api/user/profile)
     @PatchMapping("/profile")
     public ResponseEntity<Map<String, String>> updateUserProfile(@RequestBody UserUpdateRequestDto request,
