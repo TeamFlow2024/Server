@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TeamMembersRepository extends JpaRepository<TeamMembers, Long> {
+    boolean existsByTeam_TeamIdAndUser_UserId(Long teamId, String userId);
 }
