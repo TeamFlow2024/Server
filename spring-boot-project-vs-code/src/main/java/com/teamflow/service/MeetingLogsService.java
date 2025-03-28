@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.access.prepost.PreAuthorize;
 import com.teamflow.repository.TeamMembersRepository; // ✅ 수정
 import com.teamflow.repository.UserRepository;
+import org.springframework.web.server.ResponseStatusException; // 추가
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,8 +29,9 @@ public class MeetingLogsService {
         // 1. 현재 유저가 해당 팀의 멤버인지 확인
         boolean isTeamMember = teamMembersRepository.existsByTeam_TeamIdAndUser_UserId(dto.getTeamId(), currentUserId); // ✅ 수정
         if (!isTeamMember) {
-            throw new RuntimeException("이 팀에 속한 멤버가 아닙니다."); // ✅ 수정
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "이 팀에 속한 멤버가 아닙니다.");
         }
+        
 
         // 2. 팀 엔티티 조회
         Team team = teamRepository.findById(dto.getTeamId())
