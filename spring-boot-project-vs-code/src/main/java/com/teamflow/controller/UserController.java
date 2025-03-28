@@ -4,7 +4,8 @@ import com.teamflow.dto.UserRequestDto;
 import com.teamflow.dto.UserResponseDto;
 import com.teamflow.dto.UserUpdateRequestDto;
 import com.teamflow.service.UserService;
-
+import com.teamflow.dto.UserSimpleDto;
+import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -71,7 +72,11 @@ public class UserController {
         }
     }
 
-
+    @GetMapping("/all")
+    public ResponseEntity<List<UserSimpleDto>> getAllUsersSimple() {
+        List<UserSimpleDto> users = userService.getAllUserSimpleInfo();
+        return ResponseEntity.ok(users);
+    }
 
     // 회원 정보 수정 API (PATCH /api/user/profile)
     @PatchMapping("/profile")

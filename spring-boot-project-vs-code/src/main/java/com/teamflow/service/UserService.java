@@ -5,7 +5,9 @@ import com.teamflow.dto.UserResponseDto;
 import com.teamflow.dto.UserUpdateRequestDto;
 import com.teamflow.model.User;
 import com.teamflow.model.TeamMembers;
-
+import com.teamflow.dto.UserSimpleDto;
+import java.util.List;
+import java.util.stream.Collectors;
 import com.teamflow.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -69,6 +71,12 @@ public class UserService {
                 .map(TeamMembers::getTeam)
                 .distinct()
                 .map(TeamResponseDto::new)
+                .toList();
+    }
+
+    public List<UserSimpleDto> getAllUserSimpleInfo() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserSimpleDto(user.getUserId(), user.getUsername()))
                 .toList();
     }
 
