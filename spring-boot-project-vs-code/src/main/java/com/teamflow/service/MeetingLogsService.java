@@ -19,7 +19,7 @@ public class MeetingLogsService {
     private final TeamRepository teamRepository;
 
     // 회의록 생성
-    @PreAuthorize("hasRole('USER')") // 인증된 사용자만 접근 가능
+    @PreAuthorize("hasAnyRole('OWNER', 'MEMBER')") // 인증된 사용자만 접근 가능
     public MeetingLogs createMeetingLog(MeetingLogsDto dto) {
         Team team = teamRepository.findById(dto.getTeamId())
                 .orElseThrow(() -> new IllegalArgumentException("팀이 존재하지 않습니다."));
