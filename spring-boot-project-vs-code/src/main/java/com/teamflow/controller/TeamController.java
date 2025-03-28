@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import com.teamflow.dto.TeamResponseDto;
+
 
 @RestController
 @RequestMapping("/api/teams")
@@ -36,8 +38,10 @@ public class TeamController {
     @GetMapping("/{teamId}")
     public ResponseEntity<?> getTeamById(@PathVariable Long teamId) {
         Team team = teamService.getTeamById(teamId);
-        return ResponseEntity.ok(team);
+        TeamResponseDto dto = new TeamResponseDto(team);
+        return ResponseEntity.ok(dto); // ✅ 안전한 DTO로 반환
     }
+
 
     // 🔵 팀 멤버 추가
     @PatchMapping("/{teamId}/members")
