@@ -29,11 +29,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // ✅ 권한 직접 부여
         GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
 
-        return new org.springframework.security.core.userdetails.User(
-            user.getUserId(),
-            user.getPassword() != null ? user.getPassword() : "",
-            Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
-        );
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUserId()) // ✅ userId로 설정 (중요!)
+                .password(user.getPassword()) // ✅ 암호화된 비밀번호 저장
+                .roles("USER") // ✅ 기본 역할 설정
+                .build();
 
     }
 }

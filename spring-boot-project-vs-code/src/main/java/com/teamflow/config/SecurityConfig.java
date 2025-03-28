@@ -61,11 +61,11 @@ public class SecurityConfig {
         "/swagger-ui/**",
         "/v3/api-docs/**"
     ).permitAll()
+    .requestMatchers("/api/meeting-logs/**").hasRole("USER")
     .requestMatchers(
         "/api/user/**",
         "/api/teams/**",
         "/api/messages/**",
-        "/api/meeting-logs/**",
         "/api/events/**",
         "/api/channels/**"
     ).authenticated()
