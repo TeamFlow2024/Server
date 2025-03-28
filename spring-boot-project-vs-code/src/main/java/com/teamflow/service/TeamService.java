@@ -17,6 +17,10 @@ import com.teamflow.model.Schedule;
 import com.teamflow.model.Schedule;
 import com.teamflow.repository.ScheduleRepository;
 
+import com.teamflow.dto.TeamSummaryDto;
+import java.util.ArrayList;
+
+
 @Service
 @RequiredArgsConstructor
 public class TeamService {
@@ -97,18 +101,18 @@ public class TeamService {
     }
 
     // ✅ 내가 속한 팀 ID 목록 가져오기
-    public List<Long> getTeamIdsByUserId(String userId) {
+    public List<TeamSummaryDto> getTeamSummariesByUserId(String userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User not found: " + userId));
-
+    
         List<TeamMembers> teamMemberships = user.getTeamMembers();
-
-        List<Long> teamIds = new java.util.ArrayList<>();
+    
+        List<TeamSummaryDto> summaries = new java.util.ArrayList<>();
         for (TeamMembers membership : teamMemberships) {
-            teamIds.add(membership.getTeam().getTeamId());
+            summaries.add(TeamSummaryDto.fromEntity(membership.getTeam()));
         }
-
-        return teamIds;
+    
+        return summaries;
     }
 
 

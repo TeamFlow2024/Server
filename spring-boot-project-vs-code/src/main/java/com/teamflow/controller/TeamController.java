@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import com.teamflow.dto.TeamResponseDto;
+import com.teamflow.dto.TeamSummaryDto;
+
 
 
 @RestController
@@ -52,8 +54,8 @@ public class TeamController {
 
     // 🔴 내가 속한 팀 ID 목록 조회 (GET /api/teams/my)
     @GetMapping("/my")
-    public ResponseEntity<?> getMyTeamIds(@RequestHeader("userId") String userId) {
-        List<Long> myTeamIds = teamService.getTeamIdsByUserId(userId);
-        return ResponseEntity.ok(Map.of("myTeamIds", myTeamIds));
+    public ResponseEntity<?> getMyTeams(@RequestHeader("userId") String userId) {
+        List<TeamSummaryDto> myTeams = teamService.getTeamSummariesByUserId(userId);
+        return ResponseEntity.ok(Map.of("myTeams", myTeams));
     }
 }
