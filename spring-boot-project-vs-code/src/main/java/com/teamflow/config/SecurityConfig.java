@@ -59,7 +59,10 @@ public class SecurityConfig {
         "/api/user/duplicate-email",
         "/api/auth/login",
         "/swagger-ui/**",
-        "/v3/api-docs/**"
+        "/v3/api-docs/**",
+        "/swagger-resources/**",
+        "/webjars/**"
+
     ).permitAll()
     .requestMatchers(
         "/api/user/**",
