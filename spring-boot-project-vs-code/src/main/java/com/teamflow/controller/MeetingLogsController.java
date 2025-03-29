@@ -19,26 +19,57 @@ public class MeetingLogsController {
 
     // 회의록 생성 (날짜 및 시작 시간 포함)
     @PostMapping
-    public ResponseEntity<MeetingLogs> createMeetingLog(@RequestBody MeetingLogsDto dto,
-                                                        @AuthenticationPrincipal UserDetails userDetails) { // ✅ 수정
-        String currentUserId = userDetails.getUsername(); // ✅ userId 추출
-        MeetingLogs log = meetingLogsService.createMeetingLog(dto, currentUserId); // ✅ userId 전달
-        return ResponseEntity.ok(log);
+    public ResponseEntity<MeetingLogResponseDto> createMeetingLog(@RequestBody MeetingLogsDto dto,
+                                                                @AuthenticationPrincipal UserDetails userDetails) {
+        String currentUserId = userDetails.getUsername();
+        MeetingLogs log = meetingLogsService.createMeetingLog(dto, currentUserId);
+
+        // 👉 DTO 변환
+        MeetingLogResponseDto response = new MeetingLogResponseDto(
+            log.getLogId(),
+            log.getTeam().getTeamId(),
+            log.getTitle(),
+            log.getLogText(),
+            log.getMeetingDate()
+        );
+
+        return ResponseEntity.ok(response);
     }
+
 
     // 특정 팀의 모든 회의록 조회
     @GetMapping("/{teamId}")
-    public ResponseEntity<List<MeetingLogs>> getMeetingLogsByTeam(@PathVariable Long teamId) {
+    public ResponseEntity<List<MeetingLogResponseDto>> getMeetingLogsByTeam(@PathVariable Long teamId) {
         List<MeetingLogs> logs = meetingLogsService.getMeetingLogsByTeam(teamId);
-        return ResponseEntity.ok(logs);
+
+        List<MeetingLogResponseDto> response = logs.stream()
+                .map(log -> new MeetingLogResponseDto(
+                        log.getLogId(),
+                        log.getTeam().getTeamId(),
+                        log.getTitle(),
+                        log.getLogText(),
+                        log.getMeetingDate()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
-    // ✅ 특정 회의록 1개 조회 (logId 기준)
     @GetMapping("/log/{logId}")
-    public ResponseEntity<MeetingLogs> getMeetingLogById(@PathVariable Long logId) {
+    public ResponseEntity<MeetingLogResponseDto> getMeetingLogById(@PathVariable Long logId) {
         MeetingLogs log = meetingLogsService.getMeetingLogById(logId);
-        return ResponseEntity.ok(log);
+
+        MeetingLogResponseDto response = new MeetingLogResponseDto(
+                log.getLogId(),
+                log.getTeam().getTeamId(),
+                log.getTitle(),
+                log.getLogText(),
+                log.getMeetingDate()
+        );
+
+        return ResponseEntity.ok(response);
     }
+
 
     // 회의록 삭제
     @DeleteMapping("/{logId}")
