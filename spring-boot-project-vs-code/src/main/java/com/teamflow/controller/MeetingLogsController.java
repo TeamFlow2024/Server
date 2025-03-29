@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal; 
 import org.springframework.security.core.userdetails.UserDetails;
 import com.teamflow.dto.MeetingLogResponseDto;
+import com.teamflow.dto.MeetingLogsUpdateDto;
 
 import java.util.List;
 
@@ -32,6 +33,26 @@ public class MeetingLogsController {
             log.getTitle(),
             log.getLogText(),
             log.getMeetingDate()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{logId}")
+    public ResponseEntity<MeetingLogResponseDto> updateMeetingLog(
+            @PathVariable Long logId,
+            @RequestBody MeetingLogsUpdateDto dto,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        String currentUserId = userDetails.getUsername();
+        MeetingLogs updatedLog = meetingLogsService.updateMeetingLog(logId, dto, currentUserId);
+
+        MeetingLogResponseDto response = new MeetingLogResponseDto(
+                updatedLog.getLogId(),
+                updatedLog.getTeam().getTeamId(),
+                updatedLog.getTitle(),
+                updatedLog.getLogText(),
+                updatedLog.getMeetingDate()
         );
 
         return ResponseEntity.ok(response);
