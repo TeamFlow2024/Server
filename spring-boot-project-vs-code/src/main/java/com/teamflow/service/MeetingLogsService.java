@@ -12,6 +12,7 @@ import com.teamflow.repository.TeamMembersRepository; // ✅ 수정
 import com.teamflow.repository.UserRepository;
 import org.springframework.web.server.ResponseStatusException; // 추가
 import org.springframework.http.HttpStatus;
+import com.teamflow.dto.MeetingLogsUpdateDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -65,4 +66,27 @@ public class MeetingLogsService {
     public void deleteMeetingLog(Long logId) {
         meetingLogsRepository.deleteById(logId);
     }
+
+    // 회의록 수정
+    public MeetingLogs updateMeetingLog(Long logId, MeetingLogsUpdateDto dto, String currentUserId) {
+        MeetingLogs log = meetingLogsRepository.findById(logId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 회의록이 존재하지 않습니다."));
+    
+        // ✅ 유저가 팀 멤버인지 확인
+        boolean isTeamMember = teamMembersRepository.existsByTeam_TeamIdAndUser_UserId(log.getTeam().getTeamId(), currentUserId);
+        if (!isTeamMember) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "이 팀에 속한 멤버가 아닙니다.");
+        }
+    
+        // ✅ 제목과 내용 수정
+        if (dto.getTitle() != null && !dto.getTitle().isBlank()) {
+            log.setTitle(dto.getTitle());
+        }
+        if (dto.getLogText() != null && !dto.getLogText().isBlank()) {
+            log.setLogText(dto.getLogText());
+        }
+    
+        return meetingLogsRepository.save(log);
+    }
+    
 }
