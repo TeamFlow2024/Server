@@ -1,6 +1,6 @@
-package com.teamflow.model;
+// package com.teamflow.model;
 
-public enum ScheduleType {
-    PERSONAL,
-    TEAM;
-}
+// public enum ScheduleType {
+//     PERSONAL,
+//     TEAM;
+// }

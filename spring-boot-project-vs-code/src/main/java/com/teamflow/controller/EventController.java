@@ -19,31 +19,48 @@ public class EventController {
 
     private final EventService eventService;
 
-    @PostMapping("/{scheduleId}")
-    public EventResponseDto createEvent(@PathVariable Long scheduleId, @RequestBody EventDto dto) {
-        return eventService.addEvent(scheduleId, dto);
+    // ✅ 개인 캘린더에 이벤트 추가
+    @PostMapping("/personal")
+    public EventResponseDto createPersonalEvent(@RequestBody EventDto dto,
+                                                @AuthenticationPrincipal User user) {
+        return eventService.addEventToPersonalSchedule(dto, user);
     }
 
-    @GetMapping
-    public List<EventResponseDto> getEvents(@AuthenticationPrincipal User user) {
+    // ✅ 팀 캘린더에 이벤트 추가
+    @PostMapping("/team")
+    public EventResponseDto createTeamEvent(@RequestBody EventDto dto) {
+        return eventService.addEventToTeamSchedule(dto);
+    }
+
+    // ✅ 내 모든 이벤트 조회 (개인 + 팀 통합)
+    @GetMapping("/personal")
+    public List<EventResponseDto> getMyEvents(@AuthenticationPrincipal User user) {
         return eventService.getEventsForUser(user);
     }
 
-    @PatchMapping("/{eventId}")
-    public EventResponseDto updateEvent(@PathVariable Long eventId, @RequestBody EventDto dto) {
-        return eventService.updateEvent(eventId, dto);
+    // ✅ 팀 일정 조회
+    @GetMapping("/team/{teamId}")
+    public List<EventResponseDto> getTeamEvents(@PathVariable Long teamId) {
+        return eventService.getEventsByTeam(teamId);
     }
 
+    // ✅ 단일 스케줄에 모든 이벤트 조회 (팀 일정만 사용됨)
     @GetMapping("/schedule/{scheduleId}")
     public List<EventResponseDto> getAllEventsBySchedule(@PathVariable Long scheduleId) {
         return eventService.getAllEventsBySchedule(scheduleId);
     }
 
-    // 🔥 추가된 코드 (캘린더 아이디 + 날짜로 조회)
+    // ✅ 날짜 + 스케줄 ID로 조회
     @GetMapping("/{scheduleId}/{date}")
     public List<EventResponseDto> getEventsByDateAndSchedule(
             @PathVariable Long scheduleId,
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         return eventService.getEventsByScheduleAndDate(scheduleId, date);
     }
-}
+
+    // ✅ 이벤트 수정
+    @PatchMapping("/{eventId}")
+    public EventResponseDto updateEvent(@PathVariable Long eventId, @RequestBody EventDto dto) {
+        return eventService.updateEvent(eventId, dto);
+    }
+} 
