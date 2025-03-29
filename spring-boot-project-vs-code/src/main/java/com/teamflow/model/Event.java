@@ -1,10 +1,10 @@
 package com.teamflow.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Event")
@@ -16,7 +16,10 @@ public class Event {
     private Long eventId;
 
     @ManyToOne
-    private Schedule schedule;
+    private TeamSchedule teamSchedule;
+
+    @ManyToOne
+    private PersonalSchedule personalSchedule;
 
     private String title;
     private LocalDate startTime;

@@ -1,63 +1,73 @@
-package com.teamflow.service;
+// package com.teamflow.service;
 
-import com.teamflow.dto.ScheduleDto;
-import com.teamflow.model.Schedule;
-import com.teamflow.model.ScheduleType;
-import com.teamflow.model.Team;
-import com.teamflow.model.User;
-import com.teamflow.repository.ScheduleRepository;
-import com.teamflow.repository.TeamRepository;
-import com.teamflow.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import java.util.stream.Collectors;
+// import com.teamflow.dto.ScheduleDto;
+// import com.teamflow.model.Schedule;
+// import com.teamflow.model.ScheduleType;
+// import com.teamflow.model.Team;
+// import com.teamflow.model.User;
+// import com.teamflow.repository.ScheduleRepository;
+// import com.teamflow.repository.TeamRepository;
+// import com.teamflow.repository.UserRepository;
+// import lombok.RequiredArgsConstructor;
+// import org.springframework.stereotype.Service;
+// import java.util.stream.Collectors;
 
-import java.util.ArrayList;
-import java.util.List;
+// import java.util.ArrayList;
+// import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class ScheduleService {
+// @Service
+// @RequiredArgsConstructor
+// public class ScheduleService {
 
-    private final ScheduleRepository scheduleRepository;
-    private final UserRepository userRepository;
-    private final TeamRepository teamRepository;
+//     private final ScheduleRepository scheduleRepository;
+//     private final UserRepository userRepository;
+//     private final TeamRepository teamRepository;
 
-    public Schedule createSchedule(ScheduleDto dto) {
-        Schedule schedule = new Schedule();
-        schedule.setType(ScheduleType.valueOf(dto.getType().toUpperCase())); // ✅ Enum 타입에 맞게 수정
+//     public Schedule createSchedule(ScheduleDto dto) {
+//         Schedule schedule = new Schedule();
+//         schedule.setType(ScheduleType.valueOf(dto.getType().toUpperCase())); // ✅ Enum 타입에 맞게 수정
 
-        if ("PERSONAL".equals(dto.getType())) {
-            User user = userRepository.findById(dto.getUserId())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-            schedule.setUser(user);
-            schedule.setDescription(dto.getDescription());
-        } else if ("TEAM".equals(dto.getType())) {
-            Team team = teamRepository.findById(dto.getTeamId())
-                    .orElseThrow(() -> new RuntimeException("Team not found"));
-            schedule.setTeam(team);
-            schedule.setDescription(dto.getDescription());
-        }
+//         if ("PERSONAL".equals(dto.getType())) {
+//             User user = userRepository.findById(dto.getUserId())
+//                     .orElseThrow(() -> new RuntimeException("User not found"));
+//             schedule.setUser(user);
+//             schedule.setDescription(dto.getDescription());
+//         } else if ("TEAM".equals(dto.getType())) {
+//             Team team = teamRepository.findById(dto.getTeamId())
+//                     .orElseThrow(() -> new RuntimeException("Team not found"));
+//             schedule.setTeam(team);
+//             schedule.setDescription(dto.getDescription());
+//         }
 
-        return scheduleRepository.save(schedule);
-    }
+//         return scheduleRepository.save(schedule);
+//     }
 
-    public List<Schedule> getSchedulesForUser(User user) {
-        List<Schedule> schedules = new ArrayList<>();
+//     public List<Schedule> getSchedulesForUser(User user) {
+//         List<Schedule> schedules = new ArrayList<>();
     
-        // 개인 캘린더
-        scheduleRepository.findByUser(user).ifPresent(schedules::add);
+//         // 개인 캘린더
+//         scheduleRepository.findByUser(user).ifPresent(schedules::add);
 
-        // 사용자가 속한 팀 캘린더 추가 (팀 이름으로 조회)
-        List<Team> teams = user.getTeamMembers().stream()
-        .map(tm -> tm.getTeam())
-        .distinct()
-        .collect(Collectors.toList());
+//         // 사용자가 속한 팀 캘린더 추가 (팀 이름으로 조회)
+//         List<Team> teams = user.getTeamMembers().stream()
+//         .map(tm -> tm.getTeam())
+//         .distinct()
+//         .collect(Collectors.toList());
 
-        schedules.addAll(scheduleRepository.findAllByTeamIn(teams));
+//         schedules.addAll(scheduleRepository.findAllByTeamIn(teams));
     
-        return schedules;
-    }
+//         return schedules;
+//     }
+
+//     public Schedule createPersonalSchedule(ScheduleDto dto, User user) {
+//         Schedule schedule = new Schedule();
+//         schedule.setType(ScheduleType.PERSONAL);
+//         schedule.setUser(user);
+//         schedule.setDescription(dto.getDescription());
+    
+//         return scheduleRepository.save(schedule);
+//     }
+    
     
 
-}
+// }

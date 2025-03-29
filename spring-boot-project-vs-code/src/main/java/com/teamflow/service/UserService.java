@@ -21,10 +21,12 @@ import com.teamflow.model.Team;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PersonalScheduleService personalScheduleService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, PersonalScheduleService personalScheduleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.personalScheduleService = personalScheduleService;
     }
 
     // 회원가입 처리
@@ -32,14 +34,18 @@ public class UserService {
         if (userRepository.findByUserId(userDto.getUserId()).isPresent()) {
             return "이미 존재하는 사용자 아이디입니다.";
         }
-
+    
         User user = new User();
         user.setUserId(userDto.getUserId());
         user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setEmail(userDto.getEmail()); // ✅ 이메일 저장
-
-        userRepository.save(user);
+        user.setEmail(userDto.getEmail());
+    
+        User savedUser = userRepository.save(user);
+    
+        // ✅ 개인 캘린더 생성
+        personalScheduleService.createForUser(savedUser);
+    
         return "회원가입 성공!";
     }
 

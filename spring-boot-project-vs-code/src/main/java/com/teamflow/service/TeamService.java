@@ -1,7 +1,5 @@
 package com.teamflow.service;
 
-import com.teamflow.model.Schedule;
-import com.teamflow.model.ScheduleType;
 import com.teamflow.model.Team;
 import com.teamflow.model.TeamMembers;
 import com.teamflow.model.User;
@@ -13,9 +11,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import com.teamflow.model.Schedule;
-import com.teamflow.model.Schedule;
-import com.teamflow.repository.ScheduleRepository;
 
 import com.teamflow.dto.TeamSummaryDto;
 import java.util.ArrayList;
@@ -27,26 +22,22 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final TeamMembersRepository teamMembersRepository;
     private final UserRepository userRepository;
-    private final ScheduleRepository scheduleRepository;
+    private final TeamScheduleService teamScheduleService; // ✅ 추가 필요!
+
 
     public Team createTeam(String teamName, String teamColor, String ownerUserId, List<String> memberIds){
         // 🔍 owner 조회 (userId 기반)
         User owner = userRepository.findByUserId(ownerUserId)
                 .orElseThrow(() -> new RuntimeException("User not found: " + ownerUserId));
     
-        // 🗓️ 팀 캘린더 생성
-        Schedule schedule = new Schedule();
-        schedule.setType(ScheduleType.TEAM);
-        schedule.setDescription(teamName + " 캘린더");
-        schedule = scheduleRepository.save(schedule);
-    
         // 🧩 팀 생성
         Team team = new Team();
         team.setTeamName(teamName);
         team.setTeamColor(teamColor);
         team.setUser(owner); // 팀 생성자(owner)
-        team.setSchedule(schedule);
         team = teamRepository.save(team);
+
+        teamScheduleService.createTeamSchedule(team);
     
         // 🔥 [1] 오너도 팀 멤버로 등록
         TeamMembers ownerMember = new TeamMembers();

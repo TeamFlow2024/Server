@@ -2,13 +2,8 @@ package com.teamflow.service;
 
 import com.teamflow.dto.EventDto;
 import com.teamflow.dto.EventResponseDto;
-import com.teamflow.model.Schedule;
-import com.teamflow.model.Event;
-import com.teamflow.model.Team;
-import com.teamflow.model.User;
-import com.teamflow.repository.ScheduleRepository;
-import com.teamflow.repository.EventRepository;
-import com.teamflow.repository.TeamRepository;
+import com.teamflow.model.*;
+import com.teamflow.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,84 +16,100 @@ import java.util.stream.Collectors;
 public class EventService {
 
     private final EventRepository eventRepository;
-    private final ScheduleRepository scheduleRepository;
+    private final PersonalScheduleRepository personalScheduleRepository;
+    private final TeamScheduleRepository teamScheduleRepository;
     private final TeamRepository teamRepository;
 
-    public EventResponseDto addEvent(Long scheduleId, EventDto dto) {
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+    // ✅ 개인 일정 추가
+    public EventResponseDto addEventToPersonalSchedule(EventDto dto, User user) {
+        PersonalSchedule schedule = personalScheduleRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("개인 캘린더를 찾을 수 없습니다."));
 
         Event event = new Event();
-        event.setSchedule(schedule);
+        event.setPersonalSchedule(schedule);
         event.setTitle(dto.getTitle());
         event.setStartTime(dto.getStartTime());
         event.setEndTime(dto.getEndTime());
         event.setColor(dto.getColor());
 
-        Event savedEvent = eventRepository.save(event);
-        return convertToDto(savedEvent);
+        return convertToDto(eventRepository.save(event));
     }
 
+    // ✅ 팀 일정 추가
+    public EventResponseDto addEventToTeamSchedule(EventDto dto) {
+        Team team = teamRepository.findById(dto.getTeamId())
+                .orElseThrow(() -> new RuntimeException("Team not found"));
+
+        TeamSchedule schedule = teamScheduleRepository.findByTeam(team)
+                .orElseThrow(() -> new RuntimeException("Team schedule not found"));
+
+        Event event = new Event();
+        event.setTeamSchedule(schedule);
+        event.setTitle(dto.getTitle());
+        event.setStartTime(dto.getStartTime());
+        event.setEndTime(dto.getEndTime());
+        event.setColor(dto.getColor());
+
+        return convertToDto(eventRepository.save(event));
+    }
+
+    // ✅ 내 모든 이벤트 조회 (개인 + 소속 팀)
     public List<EventResponseDto> getEventsForUser(User user) {
-        // 사용자 개인 캘린더
-        List<Schedule> schedules = scheduleRepository.findByUser(user)
-                .map(List::of)
-                .orElseGet(List::of);
+        List<Event> events = personalScheduleRepository.findByUser(user)
+                .map(eventRepository::findAllByPersonalSchedule)
+                .orElse(List.of());
 
-        // 사용자 소속 팀의 팀 캘린더 추가
         List<Team> teams = user.getTeamMembers().stream()
-    .map(tm -> tm.getTeam())
-    .distinct()
-    .collect(Collectors.toList());
+                .map(TeamMembers::getTeam)
+                .distinct()
+                .collect(Collectors.toList());
 
-        schedules.addAll(scheduleRepository.findAllByTeamIn(teams));
-    
-        // 해당 스케줄에 연결된 이벤트들 반환
-        List<Event> events = eventRepository.findAllByScheduleIn(schedules);
-    
-        return events.stream()
-            .map(this::convertToDto)
-            .collect(Collectors.toList());
+        for (Team team : teams) {
+            teamScheduleRepository.findByTeam(team).ifPresent(schedule -> {
+                events.addAll(eventRepository.findAllByTeamSchedule(schedule));
+            });
+        }
+
+        return events.stream().map(this::convertToDto).collect(Collectors.toList());
     }
-    
 
     public EventResponseDto updateEvent(Long eventId, EventDto dto) {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new RuntimeException("Event not found"));
 
-        if (dto.getTitle() != null)
-            event.setTitle(dto.getTitle());
-        if (dto.getStartTime() != null)
-            event.setStartTime(dto.getStartTime());
-        if (dto.getEndTime() != null)
-            event.setEndTime(dto.getEndTime());
-        if (dto.getColor() != null)
-            event.setColor(dto.getColor());
+        if (dto.getTitle() != null) event.setTitle(dto.getTitle());
+        if (dto.getStartTime() != null) event.setStartTime(dto.getStartTime());
+        if (dto.getEndTime() != null) event.setEndTime(dto.getEndTime());
+        if (dto.getColor() != null) event.setColor(dto.getColor());
 
-        Event updatedEvent = eventRepository.save(event);
-        return convertToDto(updatedEvent);
+        return convertToDto(eventRepository.save(event));
     }
 
     public List<EventResponseDto> getAllEventsBySchedule(Long scheduleId) {
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+        List<Event> events = eventRepository.findAllByTeamSchedule(new TeamSchedule() {{
+            setTeamId(scheduleId);
+        }});
 
-        List<Event> events = eventRepository.findAllBySchedule(schedule);
-
-        return events.stream()
-                .map(event -> convertToDto(event))
-                .collect(Collectors.toList());
+        return events.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
-    // 🔥 추가된 코드 (캘린더 아이디 + 날짜로 이벤트 조회)
     public List<EventResponseDto> getEventsByScheduleAndDate(Long scheduleId, LocalDate date) {
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+        List<Event> events = eventRepository.findAllByTeamScheduleAndDate(new TeamSchedule() {{
+            setTeamId(scheduleId);
+        }}, date);
 
-        List<Event> events = eventRepository.findAllByScheduleAndDate(schedule, date);
+        return events.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
 
-        return events.stream()
-                .map(event -> convertToDto(event))
+    public List<EventResponseDto> getEventsByTeam(Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new RuntimeException("Team not found"));
+
+        TeamSchedule schedule = teamScheduleRepository.findByTeam(team)
+                .orElseThrow(() -> new RuntimeException("Team schedule not found"));
+
+        return eventRepository.findAllByTeamSchedule(schedule).stream()
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
@@ -109,7 +120,15 @@ public class EventService {
         dto.setStartTime(event.getStartTime());
         dto.setEndTime(event.getEndTime());
         dto.setColor(event.getColor());
-        dto.setScheduleId(event.getSchedule().getScheduleId());
+
+        if (event.getTeamSchedule() != null) {
+            dto.setType("TEAM");
+            dto.setTeamId(event.getTeamSchedule().getTeamId());
+        } else if (event.getPersonalSchedule() != null) {
+            dto.setType("PERSONAL");
+            dto.setPersonalScheduleId(event.getPersonalSchedule().getId());
+        }
+
         return dto;
     }
 }

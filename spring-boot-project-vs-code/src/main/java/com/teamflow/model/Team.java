@@ -22,9 +22,9 @@ public class Team {
     @JoinColumn(name = "userId", nullable = false)
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "schedule_id")
-    private com.teamflow.model.Schedule schedule;
+    @OneToOne(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private TeamSchedule teamSchedule;
+
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference // 순환 참조 방지 (또는 @JsonIgnoreProperties 사용 가능)

@@ -12,5 +12,11 @@ public class EventResponseDto {
     private LocalDate startTime;
     private LocalDate endTime;
     private String color;
-    private Long scheduleId;
+
+    // ✅ 어느 쪽 스케줄에 소속된 이벤트인지 표시
+    private String type; // "TEAM" or "PERSONAL"
+
+    // ✅ 선택적으로 내려줄 수 있는 정보
+    private Long teamId;
+    private Long personalScheduleId;
 }
