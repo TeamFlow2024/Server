@@ -24,8 +24,9 @@ public class EventService {
     private final TeamRepository teamRepository;
 
     public EventResponseDto addEventToPersonalSchedule(PersonalEventDto dto, User user) {
-        PersonalSchedule schedule = personalScheduleRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("개인 캘린더를 찾을 수 없습니다."));
+        PersonalSchedule schedule = personalScheduleRepository.findByUserId(user.getUserId())
+    .orElseThrow(() -> new RuntimeException("개인 캘린더를 찾을 수 없습니다."));
+
     
         Event event = new Event();
         event.setPersonalSchedule(schedule);
