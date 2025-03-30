@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface PersonalScheduleRepository extends JpaRepository<PersonalSchedule, Long> {
-    Optional<PersonalSchedule> findByUser(User user);
+    Optional<PersonalSchedule> findByUser_Id(Long userId);
 }
