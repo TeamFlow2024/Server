@@ -1,6 +1,5 @@
 package com.teamflow.service;
 
-import com.teamflow.dto.EventDto;
 import com.teamflow.dto.EventResponseDto;
 import com.teamflow.model.*;
 import com.teamflow.repository.*;
