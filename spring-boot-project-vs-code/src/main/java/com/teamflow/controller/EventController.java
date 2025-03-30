@@ -45,10 +45,10 @@ public class EventController {
     }
 
     // ✅ 단일 스케줄에 모든 이벤트 조회 (팀 일정만 사용됨)
-    @GetMapping("/schedule/{scheduleId}")
-    public List<EventResponseDto> getAllEventsBySchedule(@PathVariable Long scheduleId) {
-        return eventService.getAllEventsBySchedule(scheduleId);
-    }
+    // @GetMapping("/schedule/{scheduleId}")
+    // public List<EventResponseDto> getAllEventsBySchedule(@PathVariable Long scheduleId) {
+    //     return eventService.getAllEventsBySchedule(scheduleId);
+    // }
 
     // ✅ 날짜 + 스케줄 ID로 조회
     @GetMapping("/{scheduleId}/{date}")
