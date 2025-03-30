@@ -86,19 +86,7 @@ public class EventService {
                 .map(this::convertToDto)
                 .toList();
     }
-    
 
-    public EventResponseDto updateEvent(Long eventId, EventDto dto) {
-        Event event = eventRepository.findById(eventId)
-                .orElseThrow(() -> new RuntimeException("Event not found"));
-
-        if (dto.getTitle() != null) event.setTitle(dto.getTitle());
-        if (dto.getStartTime() != null) event.setStartTime(dto.getStartTime());
-        if (dto.getEndTime() != null) event.setEndTime(dto.getEndTime());
-        if (dto.getColor() != null) event.setColor(dto.getColor());
-
-        return convertToDto(eventRepository.save(event));
-    }
 
     public List<EventResponseDto> getAllEventsBySchedule(Long scheduleId) {
         List<Event> events = eventRepository.findAllByTeamSchedule(new TeamSchedule() {{
