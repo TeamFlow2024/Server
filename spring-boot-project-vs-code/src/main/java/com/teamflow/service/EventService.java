@@ -8,11 +8,11 @@ import com.teamflow.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
-
-
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.teamflow.security.JwtTokenProvider;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +22,8 @@ public class EventService {
     private final PersonalScheduleRepository personalScheduleRepository;
     private final TeamScheduleRepository teamScheduleRepository;
     private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public EventResponseDto addEventToPersonalSchedule(PersonalEventDto dto, User user) {
         PersonalSchedule schedule = personalScheduleRepository
@@ -83,15 +85,21 @@ public class EventService {
     }
     
 
-    public List<EventResponseDto> getPersonalEvents(User user) {
-        return personalScheduleRepository.findByUser_Id(user.getId())
-        .map(eventRepository::findAllByPersonalSchedule)
-        .orElse(List.of())
-        .stream()
-        .map(this::convertToDto)
-        .toList();
-
+    public List<EventResponseDto> getPersonalEvents(HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String userId = jwtTokenProvider.getUserIdFromToken(token);
+        
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("유저 없음"));
+    
+        
+        PersonalSchedule schedule = personalScheduleRepository.findByUser_Id(user.getId())
+                .orElseThrow(() -> new RuntimeException("개인 캘린더 없음"));
+    
+        List<Event> events = eventRepository.findAllByPersonalSchedule(schedule);
+        return events.stream().map(this::convertToDto).toList();
     }
+    
 
 
     public List<EventResponseDto> getAllEventsBySchedule(Long scheduleId) {
