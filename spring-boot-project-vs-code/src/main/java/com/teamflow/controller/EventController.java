@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.format.annotation.DateTimeFormat;
-
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -36,9 +36,10 @@ public class EventController {
 
     // ✅ 개인 일정만
     @GetMapping("/personal")
-    public List<EventResponseDto> getMyEvents(@AuthenticationPrincipal User user) {
-        return eventService.getPersonalEvents(user);
+    public List<EventResponseDto> getMyEvents(HttpServletRequest request) {
+        return eventService.getPersonalEvents(request);
     }
+    
 
     // ✅ 팀 일정만
     @GetMapping("/team/{teamId}")
