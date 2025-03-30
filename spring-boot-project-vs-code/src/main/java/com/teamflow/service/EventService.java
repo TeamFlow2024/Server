@@ -24,7 +24,8 @@ public class EventService {
     private final TeamRepository teamRepository;
 
     public EventResponseDto addEventToPersonalSchedule(PersonalEventDto dto, User user) {
-        PersonalSchedule schedule = personalScheduleRepository.findByUserId(user.getUserId())
+        PersonalSchedule schedule = personalScheduleRepository
+    .findByUser_Id(user.getId()) // <- Long 타입 id 사용
     .orElseThrow(() -> new RuntimeException("개인 캘린더를 찾을 수 없습니다."));
 
     
@@ -59,10 +60,11 @@ public class EventService {
     // ✅ 내 모든 이벤트 조회 (개인 + 소속 팀)
     public List<EventResponseDto> getEventsForUser(User user) {
         // ✅ 개인 일정 가져오기
-        List<Event> events = personalScheduleRepository.findByUser(user)
-                .map(eventRepository::findAllByPersonalSchedule)
-                .map(ArrayList::new) // 🔥 불변 리스트를 ArrayList로 복사
-                .orElse(new ArrayList<>());
+        List<Event> events = personalScheduleRepository.findByUser_Id(user.getId())
+        .map(eventRepository::findAllByPersonalSchedule)
+        .map(ArrayList::new)
+        .orElse(new ArrayList<>());
+
     
         // ✅ 내가 속한 팀들의 일정 가져오기
         List<Team> teams = user.getTeamMembers().stream()
@@ -82,12 +84,13 @@ public class EventService {
     
 
     public List<EventResponseDto> getPersonalEvents(User user) {
-        return personalScheduleRepository.findByUser(user)
-                .map(eventRepository::findAllByPersonalSchedule)
-                .orElse(List.of())
-                .stream()
-                .map(this::convertToDto)
-                .toList();
+        return personalScheduleRepository.findByUser_Id(user.getId())
+        .map(eventRepository::findAllByPersonalSchedule)
+        .orElse(List.of())
+        .stream()
+        .map(this::convertToDto)
+        .toList();
+
     }
 
 
