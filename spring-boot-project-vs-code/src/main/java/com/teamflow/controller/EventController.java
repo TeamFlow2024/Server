@@ -1,7 +1,8 @@
 package com.teamflow.controller;
 
-import com.teamflow.dto.EventDto;
 import com.teamflow.dto.EventResponseDto;
+import com.teamflow.dto.PersonalEventDto;
+import com.teamflow.dto.TeamEventDto;
 import com.teamflow.model.User;
 import com.teamflow.service.EventService;
 import lombok.RequiredArgsConstructor;
