@@ -66,9 +66,4 @@ public class EventController {
         return eventService.getEventsByScheduleAndDate(scheduleId, date);
     }
 
-    // ✅ 이벤트 수정
-    @PatchMapping("/{eventId}")
-    public EventResponseDto updateEvent(@PathVariable Long eventId, @RequestBody EventDto dto) {
-        return eventService.updateEvent(eventId, dto);
-    }
 } 
