@@ -20,58 +20,72 @@ public class EventService {
     private final TeamScheduleRepository teamScheduleRepository;
     private final TeamRepository teamRepository;
 
-    // ✅ 개인 일정 추가
-    public EventResponseDto addEventToPersonalSchedule(EventDto dto, User user) {
+    public EventResponseDto addEventToPersonalSchedule(PersonalEventDto dto, User user) {
         PersonalSchedule schedule = personalScheduleRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("개인 캘린더를 찾을 수 없습니다."));
-
+    
         Event event = new Event();
         event.setPersonalSchedule(schedule);
         event.setTitle(dto.getTitle());
         event.setStartTime(dto.getStartTime());
         event.setEndTime(dto.getEndTime());
         event.setColor(dto.getColor());
-
+    
         return convertToDto(eventRepository.save(event));
     }
-
-    // ✅ 팀 일정 추가
-    public EventResponseDto addEventToTeamSchedule(EventDto dto) {
+    
+    public EventResponseDto addEventToTeamSchedule(TeamEventDto dto) {
         Team team = teamRepository.findById(dto.getTeamId())
                 .orElseThrow(() -> new RuntimeException("Team not found"));
-
+    
         TeamSchedule schedule = teamScheduleRepository.findByTeam(team)
                 .orElseThrow(() -> new RuntimeException("Team schedule not found"));
-
+    
         Event event = new Event();
         event.setTeamSchedule(schedule);
         event.setTitle(dto.getTitle());
         event.setStartTime(dto.getStartTime());
         event.setEndTime(dto.getEndTime());
         event.setColor(dto.getColor());
-
+    
         return convertToDto(eventRepository.save(event));
     }
+    
 
     // ✅ 내 모든 이벤트 조회 (개인 + 소속 팀)
     public List<EventResponseDto> getEventsForUser(User user) {
+        // ✅ 개인 일정 가져오기
         List<Event> events = personalScheduleRepository.findByUser(user)
                 .map(eventRepository::findAllByPersonalSchedule)
-                .orElse(List.of());
-
+                .map(ArrayList::new) // 🔥 불변 리스트를 ArrayList로 복사
+                .orElse(new ArrayList<>());
+    
+        // ✅ 내가 속한 팀들의 일정 가져오기
         List<Team> teams = user.getTeamMembers().stream()
                 .map(TeamMembers::getTeam)
                 .distinct()
-                .collect(Collectors.toList());
-
+                .toList();
+    
         for (Team team : teams) {
             teamScheduleRepository.findByTeam(team).ifPresent(schedule -> {
-                events.addAll(eventRepository.findAllByTeamSchedule(schedule));
+                events.addAll(eventRepository.findAllByTeamSchedule(schedule)); // ✅ 이제 잘 들어감
             });
         }
-
-        return events.stream().map(this::convertToDto).collect(Collectors.toList());
+    
+        // ✅ 모두 DTO로 변환해서 반환
+        return events.stream().map(this::convertToDto).toList();
     }
+    
+
+    public List<EventResponseDto> getPersonalEvents(User user) {
+        return personalScheduleRepository.findByUser(user)
+                .map(eventRepository::findAllByPersonalSchedule)
+                .orElse(List.of())
+                .stream()
+                .map(this::convertToDto)
+                .toList();
+    }
+    
 
     public EventResponseDto updateEvent(Long eventId, EventDto dto) {
         Event event = eventRepository.findById(eventId)

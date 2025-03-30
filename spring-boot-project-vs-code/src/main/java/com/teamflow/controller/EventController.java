@@ -19,36 +19,43 @@ public class EventController {
 
     private final EventService eventService;
 
-    // ✅ 개인 캘린더에 이벤트 추가
+    // 개인 일정 추가
     @PostMapping("/personal")
-    public EventResponseDto createPersonalEvent(@RequestBody EventDto dto,
+    public EventResponseDto createPersonalEvent(@RequestBody PersonalEventDto dto,
                                                 @AuthenticationPrincipal User user) {
         return eventService.addEventToPersonalSchedule(dto, user);
     }
 
-    // ✅ 팀 캘린더에 이벤트 추가
+    // 팀 일정 추가
     @PostMapping("/team")
-    public EventResponseDto createTeamEvent(@RequestBody EventDto dto) {
+    public EventResponseDto createTeamEvent(@RequestBody TeamEventDto dto) {
         return eventService.addEventToTeamSchedule(dto);
     }
 
-    // ✅ 내 모든 이벤트 조회 (개인 + 팀 통합)
+
+    // ✅ 개인 일정만
     @GetMapping("/personal")
     public List<EventResponseDto> getMyEvents(@AuthenticationPrincipal User user) {
-        return eventService.getEventsForUser(user);
+        return eventService.getPersonalEvents(user);
     }
 
-    // ✅ 팀 일정 조회
+    // ✅ 팀 일정만
     @GetMapping("/team/{teamId}")
     public List<EventResponseDto> getTeamEvents(@PathVariable Long teamId) {
         return eventService.getEventsByTeam(teamId);
     }
 
-    // ✅ 단일 스케줄에 모든 이벤트 조회 (팀 일정만 사용됨)
-    @GetMapping("/schedule/{scheduleId}")
-    public List<EventResponseDto> getAllEventsBySchedule(@PathVariable Long scheduleId) {
-        return eventService.getAllEventsBySchedule(scheduleId);
+    // ✅ 개인 + 소속된 팀 전체 일정
+    @GetMapping("/all")
+    public List<EventResponseDto> getAllMyEvents(@AuthenticationPrincipal User user) {
+        return eventService.getEventsForUser(user);
     }
+
+    // ✅ 단일 스케줄에 모든 이벤트 조회 (팀 일정만 사용됨)
+    // @GetMapping("/schedule/{scheduleId}")
+    // public List<EventResponseDto> getAllEventsBySchedule(@PathVariable Long scheduleId) {
+    //     return eventService.getAllEventsBySchedule(scheduleId);
+    // }
 
     // ✅ 날짜 + 스케줄 ID로 조회
     @GetMapping("/{scheduleId}/{date}")
