@@ -21,10 +21,10 @@ public class EventController {
     private final EventService eventService;
 
     // 개인 일정 추가
-    @PostMapping("/personal")
+        @PostMapping("/personal")
     public EventResponseDto createPersonalEvent(@RequestBody PersonalEventDto dto,
-                                                @AuthenticationPrincipal User user) {
-        return eventService.addEventToPersonalSchedule(dto, user);
+                                                HttpServletRequest request) {
+        return eventService.addEventToPersonalSchedule(dto, request);
     }
 
     // 팀 일정 추가

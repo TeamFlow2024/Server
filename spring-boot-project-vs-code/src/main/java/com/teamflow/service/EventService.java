@@ -25,11 +25,15 @@ public class EventService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public EventResponseDto addEventToPersonalSchedule(PersonalEventDto dto, User user) {
-        PersonalSchedule schedule = personalScheduleRepository
-    .findByUser_Id(user.getId()) // <- Long 타입 id 사용
-    .orElseThrow(() -> new RuntimeException("개인 캘린더를 찾을 수 없습니다."));
-
+    public EventResponseDto addEventToPersonalSchedule(PersonalEventDto dto, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        String userId = jwtTokenProvider.getUserIdFromToken(token);
+    
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("유저 없음"));
+    
+        PersonalSchedule schedule = personalScheduleRepository.findByUser_Id(user.getId())
+                .orElseThrow(() -> new RuntimeException("개인 캘린더 없음"));
     
         Event event = new Event();
         event.setPersonalSchedule(schedule);
