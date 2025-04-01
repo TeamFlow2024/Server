@@ -49,32 +49,31 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter)
             throws Exception {
-        http
+        http.cors()
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-    .requestMatchers(
-    "/api/user/join",
-    "/api/user/duplicate",
-    "/api/user/duplicate-email",
-    "/api/auth/login",
-    "/swagger-ui/**",
-    "/v3/api-docs/**",
-    "/swagger-resources/**",
-    "/webjars/**"
-).permitAll()
-
-    .requestMatchers(
-        "/api/user/**",
-        "/api/teams/**",
-        "/api/messages/**",
-        "/api/events/**",
-        "/api/channels/**",
-        "/api/meeting-logs/**",
-        "/api/files/**",
-        "/api/profile/**"
-    ).authenticated()
+                .requestMatchers(
+                "/api/user/join",
+                "/api/user/duplicate",
+                "/api/user/duplicate-email",
+                "/api/auth/login",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/swagger-resources/**",
+                "/webjars/**"
+            ).permitAll()
+            .requestMatchers(
+                "/api/user/**",
+                "/api/teams/**",
+                "/api/messages/**",
+                "/api/events/**",
+                "/api/channels/**",
+                "/api/meeting-logs/**",
+                "/api/files/**",
+                "/api/profile/**"
+            ).authenticated()
 
     // 🔒 그 외 요청은 거부
     .anyRequest().denyAll()
