@@ -74,15 +74,14 @@ public class SecurityConfig {
                     "/api/channels/**",
                     "/api/meeting-logs/**",
                     "/api/files/**",
+                    "/api/chat/**",
                     "/api/profile/**"
                 ).authenticated()
                 .anyRequest().denyAll()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
-
     // ✅ CORS 설정
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
