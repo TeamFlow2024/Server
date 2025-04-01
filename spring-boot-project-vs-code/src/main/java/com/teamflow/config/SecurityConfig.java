@@ -72,7 +72,7 @@ public class SecurityConfig {
         "/api/channels/**",
         "/api/meeting-logs/**",
         "/api/files/**",
-        "/api/profile/image" 
+        "/api/profile/**"
     ).authenticated()
 
     // 🔒 그 외 요청은 거부
