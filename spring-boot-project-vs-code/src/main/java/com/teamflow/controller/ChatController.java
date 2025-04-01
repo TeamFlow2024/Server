@@ -1,7 +1,7 @@
 package com.teamflow.controller;
 
 import com.teamflow.dto.ChatMessage;
-import com.teamflow.entity.*;
+import com.teamflow.model.*;
 import com.teamflow.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.*;
