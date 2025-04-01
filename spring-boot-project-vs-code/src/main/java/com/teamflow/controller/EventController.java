@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.List;
 import com.teamflow.security.JwtTokenProvider;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/events")
