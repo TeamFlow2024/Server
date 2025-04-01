@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.util.List;
 import com.teamflow.security.JwtTokenProvider;
 
-
 @RestController
 @RequestMapping("/api/events")
 @RequiredArgsConstructor
@@ -51,9 +50,8 @@ public class EventController {
     }
 
     @GetMapping("/team-all")
-    public List<AllTeamEventDto> getGroupedTeamEvents(@RequestHeader("Authorization") String token) {
-        String userId = jwtTokenProvider.getUserIdFromToken(token);
-        return eventService.getGroupedTeamEvents(userId);
+    public List<AllTeamEventDto> getGroupedTeamEvents(@AuthenticationPrincipal User user) {
+        return eventService.getGroupedTeamEvents(user.getUserId());
     }
 
 
