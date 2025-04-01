@@ -30,3 +30,13 @@ springdoc:
   swagger-ui:
     path: /swagger-ui
   operations-sorter: method
+
+cloud:
+  aws:
+    credentials:
+      access-key: AKIA4VDBMI2CILU6RW7G
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: teamflowbucket
