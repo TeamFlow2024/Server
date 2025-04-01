@@ -70,7 +70,9 @@ public class SecurityConfig {
         "/api/messages/**",
         "/api/events/**",
         "/api/channels/**",
-        "/api/meeting-logs/**"
+        "/api/meeting-logs/**",
+        "/api/chat/**",
+        "/api/files/upload"
     ).authenticated()
 
     // 🔒 그 외 요청은 거부
