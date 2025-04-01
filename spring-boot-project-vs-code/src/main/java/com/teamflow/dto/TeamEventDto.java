@@ -6,12 +6,10 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class EventDto {
+public class TeamEventDto {
     private String title;
     private LocalDate startTime;
     private LocalDate endTime;
     private String color;
-
-    // ✅ 팀 이벤트 추가 시 사용 (개인 이벤트는 @AuthenticationPrincipal 사용)
-    private Long teamId;
+    private Long teamId; // 팀 일정 추가 시에만 사용됨
 }

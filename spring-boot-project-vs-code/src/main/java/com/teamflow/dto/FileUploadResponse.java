@@ -5,8 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserSimpleDto {
-    private String userId;
-    private String username;
-    private String profile;
+public class FileUploadResponse {
+    private String fileUrl;
 }
