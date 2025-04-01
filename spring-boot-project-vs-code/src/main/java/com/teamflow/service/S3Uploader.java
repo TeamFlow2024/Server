@@ -16,7 +16,7 @@ import java.util.UUID;
 public class S3Uploader {
 
     private final S3Client s3Client;
-    private final String bucket = "your-bucket-name";
+    private final String bucket = "teamflowbucket";
     private final String region = "ap-northeast-2";
 
     public String uploadFile(MultipartFile file, String dirName) {
