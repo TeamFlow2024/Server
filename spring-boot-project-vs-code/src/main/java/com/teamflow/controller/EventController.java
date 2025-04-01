@@ -47,22 +47,22 @@ public class EventController {
         return eventService.getEventsByTeam(teamId);
     }
 
-    // ✅ 개인 + 소속된 팀 전체 일정
-    @GetMapping("/all")
-    public List<EventResponseDto> getAllMyEvents(@AuthenticationPrincipal User user) {
-        if (user == null) {
-            System.out.println("❌ @AuthenticationPrincipal User is null!");
-            throw new RuntimeException("인증된 사용자 정보가 없습니다.");
-        }
-        System.out.println("✅ 전체 일정 요청 유저: " + user.getUserId());
-        return eventService.getEventsForUser(user);
+    @GetMapping("/team-all")
+    public List<AllTeamEventDto> getGroupedTeamEvents(@RequestHeader("Authorization") String token) {
+        String userId = jwtTokenProvider.getUserIdFromToken(token);
+        return eventService.getGroupedTeamEvents(userId);
     }
 
 
-    // ✅ 단일 스케줄에 모든 이벤트 조회 (팀 일정만 사용됨)
-    // @GetMapping("/schedule/{scheduleId}")
-    // public List<EventResponseDto> getAllEventsBySchedule(@PathVariable Long scheduleId) {
-    //     return eventService.getAllEventsBySchedule(scheduleId);
+    // ✅ 개인 + 소속된 팀 전체 일정
+    // @GetMapping("/all")
+    // public List<EventResponseDto> getAllMyEvents(@AuthenticationPrincipal User user) {
+    //     if (user == null) {
+    //         System.out.println("❌ @AuthenticationPrincipal User is null!");
+    //         throw new RuntimeException("인증된 사용자 정보가 없습니다.");
+    //     }
+    //     System.out.println("✅ 전체 일정 요청 유저: " + user.getUserId());
+    //     return eventService.getEventsForUser(user);
     // }
 
     // ✅ 날짜 + 스케줄 ID로 조회

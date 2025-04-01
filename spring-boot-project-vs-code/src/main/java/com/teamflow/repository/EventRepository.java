@@ -14,6 +14,8 @@ import java.util.List;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
+    List<Event> findByTeamSchedule(TeamSchedule teamSchedule);
+    
     // ✅ 팀 일정 조회
     List<Event> findAllByTeamSchedule(TeamSchedule teamSchedule);
 
