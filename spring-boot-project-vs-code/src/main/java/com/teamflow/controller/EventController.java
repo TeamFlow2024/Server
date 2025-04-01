@@ -50,9 +50,19 @@ public class EventController {
     }
 
     @GetMapping("/team-all")
-    public List<AllTeamEventDto> getGroupedTeamEvents(@AuthenticationPrincipal User user) {
-        return eventService.getGroupedTeamEvents(user.getUserId());
+    public ResponseEntity<?> getGroupedTeamEvents(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body(Map.of("message", "토큰이 유효하지 않습니다."));
+        }
+
+        String token = bearerToken.substring(7).trim();
+        String userId = jwtTokenProvider.getUserIdFromToken(token);
+
+        List<AllTeamEventDto> events = eventService.getGroupedTeamEvents(userId);
+        return ResponseEntity.ok(events);
     }
+
 
 
     // ✅ 개인 + 소속된 팀 전체 일정
