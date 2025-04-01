@@ -81,7 +81,7 @@ public class UserService {
 
     public List<UserSimpleDto> getAllUserSimpleInfo() {
         return userRepository.findAll().stream()
-                .map(user -> new UserSimpleDto(user.getUserId(), user.getUsername()))
+            .map(user -> new UserSimpleDto(user.getUserId(), user.getUsername(), user.getProfile()))
                 .toList();
     }
 
