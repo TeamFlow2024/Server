@@ -1,6 +1,6 @@
 package com.teamflow.repository;
 
-import com.teamflow.entity.DirectMessage;
+import com.teamflow.model.DirectMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
