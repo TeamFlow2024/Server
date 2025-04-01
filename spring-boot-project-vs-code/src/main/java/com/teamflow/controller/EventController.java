@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/events")
 @RequiredArgsConstructor
 public class EventController {
-
+    private final JwtTokenProvider jwtTokenProvider;
     private final EventService eventService;
 
     // 개인 일정 추가
