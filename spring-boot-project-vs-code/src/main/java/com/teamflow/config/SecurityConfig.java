@@ -4,7 +4,8 @@ import com.teamflow.security.JwtAuthenticationFilter;
 import com.teamflow.security.JwtTokenProvider;
 
 import com.teamflow.security.UserDetailsServiceImpl;
-
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
