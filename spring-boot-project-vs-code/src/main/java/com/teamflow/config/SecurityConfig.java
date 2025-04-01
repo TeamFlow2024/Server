@@ -54,23 +54,25 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
     .requestMatchers(
-        "/api/user/join",
-        "/api/user/duplicate",
-        "/api/user/duplicate-email",
-        "/api/auth/login",
-        "/swagger-ui/**",
-        "/v3/api-docs/**",
-        "/swagger-resources/**",
-        "/webjars/**"
+    "/api/user/join",
+    "/api/user/duplicate",
+    "/api/user/duplicate-email",
+    "/api/auth/login",
+    "/swagger-ui/**",
+    "/v3/api-docs/**",
+    "/swagger-resources/**",
+    "/webjars/**"
+).permitAll()
 
-    ).permitAll()
     .requestMatchers(
         "/api/user/**",
         "/api/teams/**",
         "/api/messages/**",
         "/api/events/**",
         "/api/channels/**",
-        "/api/meeting-logs/**"
+        "/api/meeting-logs/**",
+        "/api/files/**",
+        "/api/profile/image" 
     ).authenticated()
 
     // 🔒 그 외 요청은 거부
