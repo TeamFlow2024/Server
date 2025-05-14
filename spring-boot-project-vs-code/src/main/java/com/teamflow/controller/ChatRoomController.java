@@ -14,8 +14,9 @@ import java.util.stream.Collectors;
 public class ChatRoomController {
 
     private final DirectMessageRepository directMessageRepository;
+    // 깃 업데이트
 
-    // ✅ 사용자 기준 DM 채팅 상대 목록 조회
+    // ✅ 사용자 기준 DM 채팅 상대 목록 조회 임
     @GetMapping("/dm/users/{userId}")
     public Set<Long> getDMUserList(@PathVariable Long userId) {
         List<DirectMessage> messages = directMessageRepository.findAll();
