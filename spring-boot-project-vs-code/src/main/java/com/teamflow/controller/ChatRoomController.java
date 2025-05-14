@@ -18,13 +18,13 @@ public class ChatRoomController {
 
     // ✅ 사용자 기준 DM 채팅 상대 목록 조회 임
     @GetMapping("/dm/users/{userId}")
-    public Set<Long> getDMUserList(@PathVariable Long userId) {
+    public Set<String> getDMUserList(@PathVariable String userId) {
         List<DirectMessage> messages = directMessageRepository.findAll();
 
         // 내가 참여한 DM에서 상대방 ID만 추출
         return messages.stream()
-                .filter(m -> Objects.equals(m.getSenderId(), userId) || Objects.equals(m.getReceiverId(), userId))
-                .map(m -> Objects.equals(m.getSenderId(), userId) ? m.getReceiverId() : m.getSenderId())
-                .collect(Collectors.toSet());
+        .filter(m -> Objects.equals(m.getSenderId(), userId) || Objects.equals(m.getReceiverId(), userId))
+        .map(m -> Objects.equals(m.getSenderId(), userId) ? m.getReceiverId() : m.getSenderId())
+        .collect(Collectors.toSet());
     }
 }

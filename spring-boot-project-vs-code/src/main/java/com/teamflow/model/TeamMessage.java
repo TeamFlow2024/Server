@@ -13,7 +13,7 @@ public class TeamMessage {
     private Long id;
 
     private Long teamId;
-    private Long senderId;
+    private String senderId;
     private String content;
     private LocalDateTime timestamp;
 }
