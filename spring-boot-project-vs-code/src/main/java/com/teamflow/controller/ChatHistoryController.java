@@ -20,8 +20,8 @@ public class ChatHistoryController {
     // ✅ 개인 채팅 기록 조회
     @GetMapping("/dm/{senderId}/{receiverId}")
     public List<DirectMessage> getDirectMessages(
-            @PathVariable Long senderId,
-            @PathVariable Long receiverId) {
+            @PathVariable String senderId,
+            @PathVariable String receiverId) {
         return directMessageRepository
                 .findTop20BySenderIdAndReceiverIdOrReceiverIdAndSenderIdOrderByTimestampDesc(
                         senderId, receiverId, receiverId, senderId);
