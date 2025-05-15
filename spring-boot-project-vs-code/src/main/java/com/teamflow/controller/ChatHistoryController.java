@@ -19,18 +19,31 @@ public class ChatHistoryController {
 
     // ✅ 개인 채팅 기록 조회
     @GetMapping("/dm/{senderId}/{receiverId}")
-    public List<DirectMessage> getDirectMessages(
+public List<DirectMessage> getAllDirectMessagesNoTeam(
+        @PathVariable String senderId,
+        @PathVariable String receiverId) {
+
+    return directMessageRepository
+            .findAllBySenderIdAndReceiverIdOrReceiverIdAndSenderIdOrderByTimestampDesc(
+                    senderId, receiverId,
+                    receiverId, senderId
+            );
+}
+
+    // ✅ 팀 내 두 유저 간 전체 메시지 조회
+    @GetMapping("/dm/{teamId}/{senderId}/{receiverId}/all")
+    public List<DirectMessage> getAllDirectMessages(
+            @PathVariable Long teamId,
             @PathVariable String senderId,
             @PathVariable String receiverId) {
+
         return directMessageRepository
-                .findTop20BySenderIdAndReceiverIdOrReceiverIdAndSenderIdOrderByTimestampDesc(
-                        senderId, receiverId, receiverId, senderId);
+                .findAllByTeamIdAndSenderIdAndReceiverIdOrTeamIdAndReceiverIdAndSenderIdOrderByTimestampDesc(
+                        teamId, senderId, receiverId,
+                        teamId, receiverId, senderId
+                );
     }
 
-    // ✅ 팀 채팅 기록 조회
-    @GetMapping("/team/{teamId}")
-    public List<TeamMessage> getTeamMessages(@PathVariable Long teamId) {
-        return teamMessageRepository
-                .findTop20ByTeamIdOrderByTimestampDesc(teamId);
-    }
+
+
 }
