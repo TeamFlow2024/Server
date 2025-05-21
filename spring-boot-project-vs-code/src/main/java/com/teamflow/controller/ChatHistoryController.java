@@ -23,7 +23,11 @@ public List<DirectMessage> getAllDirectMessagesNoTeam(
         @PathVariable String senderId,
         @PathVariable String receiverId) {
 
-    return directMessageRepository.findPrivateMessages(senderId, receiverId);
+    return directMessageRepository
+            .findAllBySenderIdAndReceiverIdOrReceiverIdAndSenderIdOrderByTimestampDesc(
+                    senderId, receiverId,
+                    receiverId, senderId
+            );
 }
 
     // ✅ 팀 내 두 유저 간 전체 메시지 조회
@@ -33,6 +37,13 @@ public List<DirectMessage> getAllDirectMessagesNoTeam(
             @PathVariable String senderId,
             @PathVariable String receiverId) {
 
-        return directMessageRepository.findRecentMessagesInTeam(teamId, senderId, receiverId);
+        return directMessageRepository
+                .findAllByTeamIdAndSenderIdAndReceiverIdOrTeamIdAndReceiverIdAndSenderIdOrderByTimestampDesc(
+                        teamId, senderId, receiverId,
+                        teamId, receiverId, senderId
+                );
     }
+
+
+
 }
