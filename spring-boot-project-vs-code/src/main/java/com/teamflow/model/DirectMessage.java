@@ -16,4 +16,8 @@ public class DirectMessage {
     private String receiverId;
     private String content;
     private LocalDateTime timestamp;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id") // 팀 테이블의 PK 이름에 맞춤
+    private Team team;  // ✅ teamId → team 객체로 대체
 }
