@@ -19,7 +19,7 @@ public class ChatHistoryController {
 
     // ✅ 개인 채팅 기록 조회
     @GetMapping("/dm/{senderId}/{receiverId}")
-public List<DirectMessage> getAllDirectMessagesNoTeam(
+    public List<DirectMessage> getAllDirectMessagesNoTeam(
         @PathVariable String senderId,
         @PathVariable String receiverId) {
 
@@ -45,8 +45,8 @@ public List<DirectMessage> getAllDirectMessagesNoTeam(
     }
 
         @GetMapping("/team/{teamId}")
-        public List<DirectMessage> getAllTeamMessages(@PathVariable Long teamId) {
-        return directMessageRepository.findAllByTeamIdOrderByTimestampAsc(teamId);
+        public List<TeamMessage> getAllTeamMessages(@PathVariable Long teamId) {
+        return teamMessageRepository.findAllByTeamIdOrderByTimestampAsc(teamId);
         }
 
 
