@@ -33,4 +33,7 @@ public interface DirectMessageRepository extends JpaRepository<DirectMessage, Lo
         Long teamId1, String senderId1, String receiverId1,
         Long teamId2, String receiverId2, String senderId2
     );
+
+    List<DirectMessage> findAllByTeamIdOrderByTimestampAsc(Long teamId);
+
 }

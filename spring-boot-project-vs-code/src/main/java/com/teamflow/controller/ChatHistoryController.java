@@ -44,6 +44,10 @@ public List<DirectMessage> getAllDirectMessagesNoTeam(
                 );
     }
 
+        @GetMapping("/team/{teamId}")
+        public List<DirectMessage> getAllTeamMessages(@PathVariable Long teamId) {
+        return directMessageRepository.findAllByTeamIdOrderByTimestampAsc(teamId);
+        }
 
 
 }
